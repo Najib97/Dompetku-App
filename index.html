@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dompetku — Catatan keuangan pribadi, langsung dari HP</title>
+<meta name="description" content="Dompetku: aplikasi catatan keuangan (PWA) untuk pemasukan, pengeluaran, tabungan, budget, saldo rekening, dan split bill dari foto struk. Pasang dari browser, tanpa Play Store." />
+<meta property="og:title" content="Dompetku — Catatan keuangan pribadi, langsung dari HP" />
+<meta property="og:description" content="Pemasukan, pengeluaran, tabungan, budget, dan split bill foto struk. Pasang di HP dari browser, tanpa Play Store." />
+<meta property="og:image" content="https://najib97.github.io/Dompetku-App/images/dashboard-gelap.webp" />
+<meta name="theme-color" content="#0d2240" />
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="images/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Serif&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* Palet "Cetak Biru" — sama dengan tema Gelap di aplikasi Dompetku & halaman FlipClock */
+  :root {
+    --bg: #0d2240; --bg-2: #122b4e; --bg-3: #18355d;
+    --line: #2b4a75; --line-soft: #1b3459;
+    --grid: rgba(255,255,255,.055); --grid-major: rgba(255,255,255,.09);
+    --text: #e4eefa; --text-2: #a9beda; --muted: #8199be;
+    --accent: #1fb2ec; --accent-soft: rgba(31,178,236,.14); --accent-ink: #062240; --chalk: #7cc4ff;
+    --income: #6ee7b7; --expense: #ff8a8a; --saving: #c4b5fd;
+    --sketch: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    --hand: "Architects Daughter", "Segoe Print", cursive;
+    --mono: "JetBrains Mono", Consolas, monospace;
+    --head: "Bricolage Grotesque", "Segoe UI", sans-serif;
+    --logo: "Instrument Serif", Georgia, serif;
+    --max: 1080px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    color: var(--text); font: 16px/1.65 "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    background:
+      linear-gradient(var(--grid-major) 1px, transparent 1px) 0 0 / 120px 120px,
+      linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 0 0 / 120px 120px,
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 24px 24px,
+      var(--bg);
+  }
+  a { color: inherit; text-decoration: none; }
+  img { max-width: 100%; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding-left: 24px; padding-right: 24px; }
+  .label { font: 600 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+
+  /* ---------- ornamen cetak biru ---------- */
+  .orn { position: absolute; color: var(--muted); opacity: .38; pointer-events: none; animation: float var(--d, 8s) ease-in-out infinite alternate; }
+  .orn.acc { color: var(--accent); opacity: .5; }
+  .orn svg { display: block; width: 100%; height: auto; }
+  @keyframes float { to { transform: translateY(-10px) rotate(6deg); } }
+  @media (max-width: 760px) { .orn.hide-sm { display: none; } }
+
+  /* ---------- nav ---------- */
+  nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); background: rgba(13,34,64,.8); border-bottom: 1px dashed transparent; transition: border-color .3s; }
+  nav.scrolled { border-bottom-color: var(--line); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+  .brand { display: flex; align-items: center; gap: 10px; font: 400 26px var(--logo); letter-spacing: -.01em; }
+  .brand img { width: 30px; height: 30px; }
+  .brand b { color: var(--accent); font-weight: 400; }
+  .nav-links { display: flex; align-items: center; gap: 26px; font-size: 14px; color: var(--text-2); }
+  .nav-links a:hover { color: var(--text); }
+  @media (max-width: 720px) { .nav-links a:not(.btn) { display: none; } }
+
+  /* ---------- tombol (bayangan "tinta" ala Dompetku) ---------- */
+  .btn { display: inline-flex; align-items: center; gap: 10px; border-radius: 12px; font-weight: 700; transition: transform .12s, box-shadow .12s; cursor: pointer; font-family: inherit; font-size: 16px; }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .btn small { font: 600 12px var(--mono); opacity: .75; }
+  .btn-sm { padding: 8px 14px; font-size: 14px; background: var(--accent); color: var(--accent-ink) !important; }
+  .btn-primary { padding: 15px 26px; background: var(--accent); color: var(--accent-ink); border: 2px solid var(--accent-ink); box-shadow: 4px 4px 0 var(--chalk); }
+  .btn-primary:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--chalk); }
+  .btn-primary:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--chalk); }
+  .btn-ghost { padding: 15px 22px; border: 1.5px dashed var(--line); color: var(--text); background: rgba(13,34,64,.6); }
+  .btn-ghost:hover { border-color: var(--accent); }
+  .btn-wa { padding: 15px 24px; background: #25d366; color: #062a14; border: 2px solid #062a14; box-shadow: 4px 4px 0 #9ff0bf; }
+  .btn-wa:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 #9ff0bf; }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding-top: 64px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 26px; font: 500 12px var(--mono); color: var(--text-2); border: 1px dashed var(--line); padding: 6px 14px; border-radius: 99px; background: rgba(13,34,64,.7); }
+  .eyebrow b { color: var(--accent); font-weight: 700; }
+  h1 { font: 800 clamp(36px, 5.6vw, 60px) / 1.06 var(--head); letter-spacing: -.035em; }
+  h1 .hand, .s-head h2 .hand, .final h2 .hand { display: inline-block; position: relative; font: 400 1.04em var(--hand); letter-spacing: 0; color: var(--accent); transform: rotate(-2deg); white-space: nowrap; }
+  .underline { position: absolute; left: -2%; right: -4%; bottom: -.12em; width: 106%; height: .3em; color: var(--accent); }
+  .underline path { stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw .9s .5s ease-out forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  .lead { max-width: 520px; margin: 22px 0 32px; color: var(--text-2); font-size: clamp(16px, 2vw, 18px); }
+  .cta { display: flex; gap: 14px; flex-wrap: wrap; }
+  .meta { margin-top: 20px; font: 500 12px var(--mono); color: var(--muted); display: flex; gap: 18px; flex-wrap: wrap; }
+  .meta span::before { content: "✓ "; color: var(--accent); }
+
+  /* HP + ikon aplikasi di layar utama */
+  .phone-wrap { position: relative; justify-self: center; }
+  .phone { position: relative; width: min(300px, 74vw); aspect-ratio: 500 / 880; border-radius: 38px; padding: 10px; background: #071428; border: 2px solid var(--line); box-shadow: 0 40px 90px rgba(3,10,24,.6), 10px 10px 0 var(--accent-soft); rotate: 2deg; }
+  .phone::before { content: ""; position: absolute; top: 18px; left: 50%; translate: -50% 0; width: 70px; height: 18px; border-radius: 99px; background: #071428; z-index: 2; }
+  .phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 28px; }
+  .pwa-badge { position: absolute; left: -58px; bottom: 70px; display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 10px; border-radius: var(--sketch); background: var(--bg-2); border: 1.5px solid var(--accent); rotate: -4deg; box-shadow: 4px 4px 0 var(--accent-soft); }
+  .pwa-badge img { width: 40px; height: 40px; border-radius: 10px; }
+  .pwa-badge b { display: block; font: 700 14px var(--head); }
+  .pwa-badge small { font: 500 11px var(--mono); color: var(--text-2); }
+  .phone-note { position: absolute; right: -30px; top: -34px; font: 400 18px var(--hand); color: var(--chalk); rotate: 5deg; white-space: nowrap; }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; text-align: center; gap: 56px; }
+    .lead { margin-left: auto; margin-right: auto; }
+    .cta, .meta { justify-content: center; }
+    .pwa-badge { left: -24px; }
+    .phone-note { right: -6px; }
+  }
+
+  /* ---------- section ---------- */
+  section.wrap { padding-top: 120px; position: relative; }
+  .s-head { text-align: center; max-width: 660px; margin: 0 auto 46px; }
+  .s-head .label { display: block; margin-bottom: 14px; }
+  .s-head h2 { font: 800 clamp(28px, 4vw, 42px) / 1.12 var(--head); letter-spacing: -.03em; }
+  .s-head p { color: var(--text-2); margin-top: 12px; }
+
+  .card { position: relative; padding: 26px 24px; background: rgba(18,43,78,.85); border-radius: var(--sketch); border: 1.5px solid var(--line); transition: border-color .2s, transform .2s; }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card .n { font: 700 11px var(--mono); color: var(--accent); letter-spacing: .14em; }
+  .card h3 { font: 700 17px var(--head); margin: 8px 0 6px; }
+  .card p { font-size: 14px; color: var(--text-2); }
+
+  /* PWA */
+  .pwa { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .pwa .card { text-align: left; }
+  .pwa .ico { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: var(--accent-soft); color: var(--accent); margin-bottom: 12px; }
+  .pwa .ico svg { width: 22px; height: 22px; }
+  .pwa-explain { margin-top: 18px; padding: 18px 22px; border: 1.5px dashed var(--line); border-radius: 14px; font-size: 14px; color: var(--text-2); background: rgba(13,34,64,.6); }
+  .pwa-explain b { color: var(--text); }
+  @media (max-width: 900px) { .pwa { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .pwa { grid-template-columns: 1fr; } }
+
+  /* cara install */
+  .tabs { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+  .tab { padding: 10px 18px; border-radius: 12px; border: 1.5px dashed var(--line); background: rgba(13,34,64,.6); color: var(--text-2); font: 600 14px "Plus Jakarta Sans", sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+  .tab svg { width: 18px; height: 18px; }
+  .tab[aria-selected="true"] { border-style: solid; border-color: var(--accent); color: var(--accent-ink); background: var(--accent); }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: step; }
+  .steps[hidden] { display: none; }
+  .step { counter-increment: step; }
+  .step::before { content: counter(step, decimal-leading-zero); display: block; font: 400 34px var(--hand); color: var(--accent); line-height: 1; margin-bottom: 8px; }
+  .step h3 { margin-top: 0; }
+  .key { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg-3); font: 600 12.5px var(--mono); color: var(--text); white-space: nowrap; }
+  .key svg { width: 13px; height: 13px; }
+  .install-note { text-align: center; margin-top: 22px; font-size: 14px; color: var(--muted); }
+  .install-note a { color: var(--chalk); border-bottom: 1px dotted; }
+  @media (max-width: 820px) { .steps { grid-template-columns: 1fr; } }
+
+  /* fitur */
+  .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  @media (max-width: 820px) { .features { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 540px) { .features { grid-template-columns: 1fr; } }
+
+  /* galeri layar HP */
+  .screens { display: flex; gap: 20px; overflow-x: auto; padding: 8px 4px 26px; scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+  .screens figure { flex: none; width: 220px; scroll-snap-align: center; }
+  .screens .mini { aspect-ratio: 500 / 880; border-radius: 26px; padding: 7px; background: #071428; border: 1.5px solid var(--line); }
+  .screens img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 20px; }
+  .screens figcaption { margin-top: 10px; text-align: center; font-size: 13px; color: var(--text-2); }
+  @media (min-width: 1180px) { .screens { justify-content: center; } }
+
+  .shot { margin-top: 38px; border-radius: 14px; overflow: hidden; border: 1.5px solid var(--line); background: #0a1b33; box-shadow: 0 40px 100px rgba(3,10,24,.55); }
+  .shot .bar { height: 34px; display: flex; align-items: center; gap: 7px; padding: 0 14px; background: var(--bg-2); border-bottom: 1px dashed var(--line); }
+  .shot .bar i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--muted); }
+  .shot .bar small { margin: 0 auto; transform: translateX(-24px); font: 600 11px var(--mono); color: var(--muted); letter-spacing: .1em; }
+  .shot img { display: block; width: 100%; height: auto; }
+  .shot-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+  .shot-row .shot { margin-top: 0; }
+  @media (max-width: 700px) { .shot-row { grid-template-columns: 1fr; } }
+
+  /* tema */
+  .themes { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
+  .theme { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px 7px 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg-2); font-size: 13px; color: var(--text-2); }
+  .theme i { width: 22px; height: 22px; border-radius: 6px; border: 1px solid rgba(255,255,255,.25); background: linear-gradient(135deg, var(--a) 0 55%, var(--b) 55%); }
+
+  /* daftar akun */
+  .daftar { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: stretch; }
+  .daftar-steps { display: grid; gap: 14px; }
+  .daftar-steps .card { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+  .daftar-steps .num { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--accent); font: 400 22px var(--hand); color: var(--accent); }
+  .daftar-steps h3 { margin-top: 2px; }
+  .wa-card { display: flex; flex-direction: column; justify-content: center; gap: 16px; padding: 34px; border: 2px solid #25d366; border-radius: 18px; background: rgba(18,43,78,.9); box-shadow: 6px 6px 0 rgba(37,211,102,.18); }
+  .wa-card h3 { font: 800 24px/1.2 var(--head); }
+  .wa-card p { color: var(--text-2); font-size: 15px; }
+  .wa-card .num-wa { font: 700 20px var(--mono); color: #7ef0a8; }
+  .wa-card .small { font-size: 13px; color: var(--muted); }
+  @media (max-width: 820px) { .daftar { grid-template-columns: 1fr; } }
+
+  /* penutup */
+  .final { text-align: center; padding: 140px 24px 120px; position: relative; }
+  .final h2 { font: 800 clamp(30px, 4.6vw, 48px) / 1.1 var(--head); letter-spacing: -.03em; margin-bottom: 34px; }
+  .final .cta { justify-content: center; }
+  footer { border-top: 1px dashed var(--line); padding: 28px 0; font-size: 13px; color: var(--muted); background: rgba(13,34,64,.6); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  footer a:hover { color: var(--text); }
+  .foot-links { display: flex; gap: 20px; flex-wrap: wrap; }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .orn, .underline path { animation: none; stroke-dashoffset: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="wrap">
+    <a href="#" class="brand"><img src="images/favicon.svg" alt="" />Dompetku<b>.</b></a>
+    <div class="nav-links">
+      <a href="#pwa">PWA</a>
+      <a href="#install">Cara install</a>
+      <a href="#fitur">Fitur</a>
+      <a href="#daftar">Daftar akun</a>
+      <a href="https://dompetku9.vercel.app/" class="btn btn-sm">Buka aplikasi</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <span class="orn acc hide-sm" style="top:20px;left:-2%;width:100px;--d:6s"><svg viewBox="0 0 96 30" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.4"><path d="M4 6 V 24 M92 6 V 24"/><path d="M4 15 H 92"/><path d="M11 11 L 4 15 L 11 19 M85 11 L 92 15 L 85 19"/></svg></span>
+  <span class="orn hide-sm" style="bottom:-40px;left:40%;width:44px;--d:8s"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M20 3 V 37 M3 20 H 37"/><circle cx="20" cy="20" r="9"/></svg></span>
+
+  <div>
+    <span class="eyebrow">📱 Progressive Web App · <b>tanpa Play Store</b></span>
+    <h1>Uangmu tercatat,<br/>
+      <span class="hand">langsung dari HP.<svg class="underline" viewBox="0 0 220 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5" d="M3 9 C 40 3, 80 12, 120 7 S 190 3, 217 8"/></svg></span>
+    </h1>
+    <p class="lead">Dompetku mencatat pemasukan, pengeluaran, tabungan, dan budget bulanan. Pasang dari browser ke layar utama HP, lalu buka seperti aplikasi biasa.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="#install">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        Install di HP
+      </a>
+      <a class="btn btn-ghost" href="https://dompetku9.vercel.app/?demo">Coba demo dulu</a>
+    </div>
+    <div class="meta"><span>Android, iPhone &amp; PC</span><span>Ukuran kecil</span><span>Selalu versi terbaru</span><span>Login Google</span></div>
+  </div>
+
+  <div class="phone-wrap reveal">
+    <span class="phone-note">tampilan aslinya ✏️</span>
+    <div class="phone"><img src="images/hp-dash.webp" alt="Dashboard Dompetku di HP: saldo bulan ini, pemasukan, pengeluaran, tabungan, tren 12 bulan, dan saldo rekening" width="500" height="880" /></div>
+    <div class="pwa-badge"><img src="images/icon-192.png" alt="" /><div><b>Dompetku</b><small>di layar utama</small></div></div>
+  </div>
+</header>
+
+<section id="pwa" class="wrap">
+  <div class="s-head reveal">
+    <span class="label">PWA</span>
+    <h2>Rasanya aplikasi, <span class="hand">tanpa unduh berat.</span></h2>
+    <p>Dompetku adalah Progressive Web App: web yang bisa dipasang ke HP dan terbuka layar penuh seperti aplikasi.</p>
+  </div>
+  <div class="pwa reveal">
+    <div class="card"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span><h3>Ikon di layar utama</h3><p>Muncul di samping aplikasi lain. Sekali ketuk, langsung terbuka tanpa bilah alamat browser.</p></div>
+    <div class="card"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></span><h3>Tanpa Play Store</h3><p>Tidak perlu akun toko aplikasi dan tidak memakan banyak memori HP.</p></div>
+    <div class="card"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></span><h3>Update otomatis</h3><p>Fitur baru langsung terpasang saat aplikasi dibuka. Tidak ada tombol update.</p></div>
+    <div class="card"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><h3>HP, tablet &amp; PC</h3><p>Satu akun di semua perangkat. Tampilan menyesuaikan layar.</p></div>
+  </div>
+  <p class="pwa-explain reveal"><b>Kenapa bukan aplikasi Play Store?</b> PWA dibuka dari alamat web yang sama, jadi tampilannya selalu yang terbaru di semua perangkat. Tampilan aplikasinya tetap tersimpan di HP, sehingga terbuka cepat walau sinyal lemah.</p>
+</section>
+
+<section id="install" class="wrap">
+  <div class="s-head reveal">
+    <span class="label">Cara install</span>
+    <h2>Tiga langkah, <span class="hand">kurang dari semenit.</span></h2>
+    <p>Pilih perangkatmu.</p>
+  </div>
+  <div class="tabs reveal" role="tablist" aria-label="Perangkat">
+    <button class="tab" role="tab" aria-selected="true" data-os="android"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v6M20 10v6M7 9h10v8a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z"/><path d="M7 9a5 5 0 0 1 10 0M9 4 8 2.5M15 4l1-1.5M10 18v3M14 18v3"/></svg>Android</button>
+    <button class="tab" role="tab" aria-selected="false" data-os="ios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3c0 2-1.5 3.5-3.5 3.5C12.5 4.5 14 3 16 3z"/><path d="M12 7c-1 0-2-.6-3.2-.6C6.4 6.4 4.5 8.4 4.5 11.6 4.5 16 7.5 21 9.6 21c1.2 0 1.5-.7 2.4-.7s1.2.7 2.4.7c2 0 3.8-3.6 4.2-5.2-2-.9-2.8-2.6-2.8-4.3 0-1.6.9-3 2.3-3.7C17.300 6.900 15.900 6.400 14.900 6.400 13.800 6.400 13 7 12 7z"/></svg>iPhone / iPad</button>
+    <button class="tab" role="tab" aria-selected="false" data-os="pc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Laptop / PC</button>
+  </div>
+
+  <div class="steps reveal" data-steps="android">
+    <div class="card step"><h3>Buka di Chrome</h3><p>Buka <span class="key">dompetku9.vercel.app</span> lewat aplikasi <b>Chrome</b> di HP Android.</p></div>
+    <div class="card step"><h3>Ketuk menu ⋮</h3><p>Ketuk titik tiga <span class="key">⋮</span> di kanan atas, lalu pilih <span class="key">Instal aplikasi</span> atau <span class="key">Tambahkan ke layar utama</span>.</p></div>
+    <div class="card step"><h3>Ketuk Instal</h3><p>Konfirmasi dengan <span class="key">Instal</span>. Ikon Dompetku muncul di layar utama dan laci aplikasi.</p></div>
+  </div>
+  <div class="steps reveal" data-steps="ios" hidden>
+    <div class="card step"><h3>Buka di Safari</h3><p>Buka <span class="key">dompetku9.vercel.app</span> lewat <b>Safari</b>. Di iPhone, pemasangan hanya bisa dari Safari.</p></div>
+    <div class="card step"><h3>Ketuk Bagikan</h3><p>Ketuk tombol <span class="key"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11v9h12v-9"/></svg> Bagikan</span> di bilah bawah, lalu gulir dan pilih <span class="key">Tambah ke Layar Utama</span>.</p></div>
+    <div class="card step"><h3>Ketuk Tambah</h3><p>Ketuk <span class="key">Tambah</span> di kanan atas. Buka Dompetku dari ikon barunya di layar utama.</p></div>
+  </div>
+  <div class="steps reveal" data-steps="pc" hidden>
+    <div class="card step"><h3>Buka di Chrome / Edge</h3><p>Buka <span class="key">dompetku9.vercel.app</span> di Google Chrome atau Microsoft Edge.</p></div>
+    <div class="card step"><h3>Klik ikon install</h3><p>Klik ikon <span class="key">⊕ Instal</span> di ujung kanan bilah alamat. Atau lewat menu <span class="key">⋮</span> → <span class="key">Instal Dompetku</span>.</p></div>
+    <div class="card step"><h3>Buka dari desktop</h3><p>Dompetku terbuka di jendela sendiri dan bisa disematkan ke taskbar atau Start.</p></div>
+  </div>
+  <p class="install-note reveal">Belum punya akun? Coba dulu <a href="https://dompetku9.vercel.app/?demo">mode demo</a>, atau <a href="#daftar">daftar akun</a>.</p>
+</section>
+
+<section id="fitur" class="wrap">
+  <div class="s-head reveal">
+    <span class="label">Fitur</span>
+    <h2>Semua catatan uang, <span class="hand">di satu tempat.</span></h2>
+    <p>Dibuat untuk dipakai setiap hari, bukan sekali lalu lupa.</p>
+  </div>
+  <div class="features reveal">
+    <div class="card"><span class="n">01 · DASHBOARD</span><h3>Saldo bulan ini</h3><p>Pemasukan, pengeluaran, dan tabungan sekilas, plus tren 12 bulan dan komposisi pengeluaran.</p></div>
+    <div class="card"><span class="n">02 · BUDGET</span><h3>Budget per kategori</h3><p>Atur batas belanja tiap kategori. Dompetku memberi tanda saat budget hampir habis.</p></div>
+    <div class="card"><span class="n">03 · TABUNGAN</span><h3>Total tabungan</h3><p>Lihat berapa yang ditabung bulan ini dan total yang sudah terkumpul.</p></div>
+    <div class="card"><span class="n">04 · REKENING</span><h3>Saldo bank &amp; e-wallet</h3><p>Catat saldo BCA, Jago, GoPay, OVO, dan lainnya, lengkap dengan logo masing-masing.</p></div>
+    <div class="card"><span class="n">05 · SPLIT BILL</span><h3>Foto struk, bagi tagihan</h3><p>Foto struk, centang siapa pesan apa, lalu kirim tagihan dan QRIS per orang.</p></div>
+    <div class="card"><span class="n">06 · LAPORAN</span><h3>Report &amp; export CSV</h3><p>Ringkasan bulanan, budget vs aktual, dan transaksi rutin yang tercatat otomatis.</p></div>
+  </div>
+
+  <div class="screens reveal" aria-label="Tampilan Dompetku di HP">
+    <figure><div class="mini"><img src="images/hp-dash.webp" alt="Dashboard" loading="lazy" /></div><figcaption>Dashboard</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-riwayat.webp" alt="Riwayat transaksi" loading="lazy" /></div><figcaption>Riwayat transaksi</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-budget.webp" alt="Budget per kategori" loading="lazy" /></div><figcaption>Budget</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-rekening.webp" alt="Saldo rekening dan e-wallet" loading="lazy" /></div><figcaption>Saldo rekening</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-split.webp" alt="Split bill dari foto struk" loading="lazy" /></div><figcaption>Split bill</figcaption></figure>
+  </div>
+
+  <figure class="shot reveal">
+    <div class="bar"><i></i><i></i><i></i><small>DOMPETKU · DI LAPTOP</small></div>
+    <img src="images/dashboard-gelap.webp" alt="Dashboard Dompetku di laptop, tema Gelap" width="1310" height="784" loading="lazy" />
+  </figure>
+</section>
+
+<section id="tema" class="wrap">
+  <div class="s-head reveal">
+    <span class="label">Tema</span>
+    <h2>14 tema, <span class="hand">pilih sesukamu.</span></h2>
+    <p>Gelap, terang, sampai buku tulis dan papan kapur. Pratinjau dulu sebelum dipakai.</p>
+  </div>
+  <div class="shot-row reveal">
+    <figure class="shot"><div class="bar"><i></i><i></i><i></i><small>TEMA TERANG</small></div><img src="images/dashboard-terang.webp" alt="Dashboard tema Terang" width="1310" height="746" loading="lazy" /></figure>
+    <figure class="shot"><div class="bar"><i></i><i></i><i></i><small>PILIH TEMA</small></div><img src="images/tema.webp" alt="Halaman pilih tema dengan pratinjau tema Buku Tulis" width="1310" height="746" loading="lazy" /></figure>
+  </div>
+  <div class="themes reveal">
+    <span class="theme"><i style="--a:#0d2240;--b:#7cc4ff"></i>Gelap</span>
+    <span class="theme"><i style="--a:#f2f6fa;--b:#1e5aa8"></i>Terang</span>
+    <span class="theme"><i style="--a:#22372b;--b:#f7d774"></i>Papan Kapur</span>
+    <span class="theme"><i style="--a:#fdfbf4;--b:#c8403c"></i>Buku Tulis</span>
+    <span class="theme"><i style="--a:#0c0c0e;--b:#f0b429"></i>Klasik Gelap</span>
+    <span class="theme"><i style="--a:#e9e5dc;--b:#b83b37"></i>Kertas Terang</span>
+    <span class="theme"><i style="--a:#2b1d14;--b:#e8742a"></i>Retro 70-an</span>
+    <span class="theme"><i style="--a:#05060a;--b:#ff3df2"></i>Neon</span>
+    <span class="theme"><i style="--a:#fbe8ee;--b:#c2456b"></i>Sakura</span>
+    <span class="theme"><i style="--a:#0b0a08;--b:#d4a640"></i>Emas Mewah</span>
+    <span class="theme"><i style="--a:#0b2e24;--b:#d4af37"></i>Hijau Masjid</span>
+    <span class="theme"><i style="--a:#2a1c12;--b:#f0a952"></i>Kayu</span>
+    <span class="theme"><i style="--a:#030803;--b:#39ff6a"></i>Terminal</span>
+    <span class="theme"><i style="--a:#0a0f24;--b:#a78bfa"></i>Aurora</span>
+  </div>
+</section>
+
+<section id="daftar" class="wrap">
+  <div class="s-head reveal">
+    <span class="label">Daftar akun</span>
+    <h2>Minta akun, <span class="hand">langsung pakai.</span></h2>
+    <p>Akun Dompetku dibuatkan oleh admin. Masuknya cukup dengan akun Google, tanpa password baru.</p>
+  </div>
+  <div class="daftar reveal">
+    <div class="daftar-steps">
+      <div class="card"><span class="num">1</span><div><h3>Hubungi via WhatsApp</h3><p>Kirim nama dan alamat Gmail yang ingin dipakai untuk login.</p></div></div>
+      <div class="card"><span class="num">2</span><div><h3>Akun didaftarkan</h3><p>Admin mendaftarkan Gmail-mu, lalu mengabari lewat WhatsApp kalau sudah siap.</p></div></div>
+      <div class="card"><span class="num">3</span><div><h3>Masuk dengan Google</h3><p>Buka Dompetku, ketuk <b>Masuk dengan Google</b>, pilih Gmail yang didaftarkan, lalu install ke HP.</p></div></div>
+    </div>
+    <div class="wa-card">
+      <span class="label" style="color:#7ef0a8">WhatsApp</span>
+      <h3>Daftar akun Dompetku</h3>
+      <p>Chat ke nomor ini dengan menyertakan nama dan Gmail-mu:</p>
+      <span class="num-wa">0896-8150-3428</span>
+      <div><a class="btn btn-wa" id="waLink" href="https://wa.me/6289681503428?text=Halo%2C%20saya%20mau%20daftar%20akun%20Dompetku.%0ANama%3A%20%0AGmail%3A%20" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg>
+        Chat untuk daftar
+      </a></div>
+      <p class="small">Mau lihat-lihat dulu? <a href="https://dompetku9.vercel.app/?demo" style="color:var(--chalk);border-bottom:1px dotted">Buka mode demo</a>, tanpa login, datanya tidak disimpan.</p>
+    </div>
+  </div>
+</section>
+
+<div class="final reveal">
+  <span class="orn acc" style="top:70px;left:12%;width:34px;--d:7s"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M20 3 V 37 M3 20 H 37"/><circle cx="20" cy="20" r="9"/></svg></span>
+  <h2>Siap merapikan <span class="hand">keuanganmu?</span></h2>
+  <div class="cta">
+    <a class="btn btn-primary" href="https://dompetku9.vercel.app/">Buka Dompetku</a>
+    <a class="btn btn-ghost" href="#install">Cara install</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Berkah Tech · Dompetku</span>
+    <div class="foot-links">
+      <a href="https://najib97.github.io/">Produk lain</a>
+      <a href="https://najib97.github.io/FlipClock-Download/">FlipClock</a>
+      <a href="https://wa.me/6289681503428">WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ----- tab cara install: pilih otomatis sesuai perangkat -----
+  const tabs = [...document.querySelectorAll('[data-os]')];
+  function pilih(os) {
+    tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.os === os)));
+    document.querySelectorAll('[data-steps]').forEach((s) => (s.hidden = s.dataset.steps !== os));
+  }
+  tabs.forEach((t) => t.addEventListener('click', () => pilih(t.dataset.os)));
+  const ua = navigator.userAgent;
+  pilih(/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'ios' : /Android/.test(ua) ? 'android' : /Mobi/.test(ua) ? 'android' : 'pc');
+
+  // ----- efek muncul saat digulir & garis nav -----
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
+</script>
+</body>
+</html>
