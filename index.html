@@ -205,6 +205,104 @@
     .reveal { opacity: 1; transform: none; transition: none; }
     .orn, .underline path { animation: none; stroke-dashoffset: 0; }
   }
+
+  /* ---------- tambahan v2.4: lebih hidup di HP ---------- */
+  .phone { animation: phone-float 6s ease-in-out infinite; }
+  @keyframes phone-float { 0%,100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+  .chip-float { position: absolute; z-index: 3; display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 14px; font: 600 12.5px "Plus Jakarta Sans", sans-serif; white-space: nowrap;
+    background: rgba(18,43,78,.72); border: 1px solid rgba(124,196,255,.35); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 10px 24px -10px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.18); animation: chip-bob 5s ease-in-out infinite; }
+  .chip-float i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .chip-float.c1 { right: -46px; top: 22%; animation-delay: -1s; }
+  .chip-float.c1 i { background: var(--income); }
+  .chip-float.c2 { left: -64px; top: 46%; animation-delay: -2.5s; }
+  .chip-float.c2 i { background: var(--saving); }
+  .chip-float.c3 { right: -30px; bottom: 16%; animation-delay: -3.5s; }
+  .chip-float.c3 i { background: var(--accent); }
+  @keyframes chip-bob { 0%,100% { translate: 0 0; rotate: -2deg; } 50% { translate: 0 -12px; rotate: 2deg; } }
+  .phone img, .screens img, .shot img, .duo img { cursor: zoom-in; }
+  @media (max-width: 860px) {
+    .hero { padding-top: 36px; }
+    h1 { font-size: clamp(38px, 11vw, 56px); }
+    .chip-float.c1 { right: -14px; } .chip-float.c2 { left: -18px; } .chip-float.c3 { right: -8px; }
+    .phone { width: min(270px, 70vw); }
+  }
+
+  /* carousel layar: yang di tengah membesar */
+  .screens figure { transition: scale .45s cubic-bezier(.32,1.35,.5,1), opacity .3s; }
+  @media (max-width: 1179px) {
+    .screens { padding: 18px 13vw 30px; gap: 14px; scroll-padding: 0 13vw; }
+    .screens figure { width: 64vw; max-width: 260px; scale: .86; opacity: .55; }
+    .screens figure.is-center { scale: 1; opacity: 1; }
+  }
+  .dots { display: flex; justify-content: center; gap: 6px; margin-top: -8px; }
+  .dots i { width: 7px; height: 7px; border-radius: 99px; background: var(--line); transition: width .35s cubic-bezier(.32,1.35,.5,1), background .2s; }
+  .dots i.on { width: 22px; background: var(--accent); }
+  @media (min-width: 1180px) { .dots { display: none; } }
+
+  /* tema interaktif */
+  .mode-toggle { display: flex; justify-content: center; margin-bottom: 26px; }
+  .mode-toggle div { display: inline-grid; grid-template-columns: 1fr 1fr; padding: 4px; gap: 4px; border-radius: 14px; border: 1.5px solid var(--line); background: var(--bg-2); position: relative; }
+  .mode-toggle button { position: relative; z-index: 1; min-width: 120px; min-height: 44px; border: 0; background: none; color: var(--text-2); font: 600 15px "Plus Jakarta Sans", sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: color .25s; }
+  .mode-toggle button svg { width: 18px; height: 18px; }
+  .mode-toggle button[aria-pressed="true"] { color: var(--accent-ink); }
+  .mode-toggle .pill { position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 6px); border-radius: 10px; background: var(--accent); transition: translate .5s cubic-bezier(.32,1.45,.5,1); }
+  .mode-toggle.light .pill { translate: calc(100% + 4px) 0; }
+  .tgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+  .tcard { text-align: left; }
+  .tmock { display: flex; flex-direction: column; gap: 7px; aspect-ratio: 4/3; padding: 10px; border-radius: 12px; background: var(--t-bg); border: 1.5px solid var(--t-line);
+    transition: background-color .5s, border-color .5s, transform .4s cubic-bezier(.32,1.35,.5,1); }
+  .tcard:hover .tmock { transform: translateY(-4px) rotate(-1deg); }
+  .tmock i { display: block; border-radius: 99px; transition: background-color .5s; }
+  .tm-hero { display: flex; flex-direction: column; gap: 5px; padding: 8px; border-radius: 8px; background: var(--t-card); border: 1px solid var(--t-line); transition: background-color .5s, border-color .5s; }
+  .tm-hero i:first-child { width: 40%; height: 4px; background: var(--t-muted); }
+  .tm-hero i:last-child { width: 72%; height: 9px; background: var(--t-text); }
+  .tm-row { display: flex; align-items: center; gap: 6px; }
+  .tm-row i:nth-child(1) { width: 9px; height: 9px; }
+  .tm-row i:nth-child(2) { flex: 1; height: 4px; background: var(--t-muted); opacity: .6; }
+  .tm-row i:nth-child(3) { width: 22%; height: 5px; }
+  .tm-row.a i:nth-child(odd) { background: var(--t-inc); } .tm-row.b i:nth-child(odd) { background: var(--t-exp); } .tm-row.c i:nth-child(odd) { background: var(--t-sav); }
+  .tm-bar { display: flex; gap: 4px; } .tm-bar i { width: 7px; height: 7px; background: var(--t-line); } .tm-bar i:first-child { background: var(--t-accent); }
+  .tcard b { display: block; margin-top: 8px; font: 600 13px "Plus Jakarta Sans", sans-serif; color: var(--text-2); }
+  .duo { display: flex; justify-content: center; gap: 22px; margin-top: 40px; flex-wrap: wrap; }
+  .duo figure { width: min(230px, 42vw); text-align: center; }
+  .duo .mini { aspect-ratio: 500 / 880; border-radius: 28px; padding: 7px; background: #071428; border: 1.5px solid var(--line); box-shadow: 0 24px 50px -20px rgba(0,0,0,.6); }
+  .duo figure:nth-child(1) .mini { rotate: -3deg; } .duo figure:nth-child(2) .mini { rotate: 3deg; translate: 0 18px; }
+  .duo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 21px; }
+  .duo figcaption { margin-top: 14px; font-size: 13px; color: var(--text-2); }
+
+  /* detail aplikasi & catatan rilis */
+  .about { display: grid; grid-template-columns: .8fr 1.2fr; gap: 18px; align-items: start; }
+  .about dl { display: grid; margin-top: 12px; }
+  .about dl div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px dashed var(--line); font-size: 15px; }
+  .about dl div:last-child { border-bottom: 0; }
+  .about dt { font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); align-self: center; }
+  .about dd { font-weight: 600; text-align: right; }
+  .log { list-style: none; margin-top: 12px; }
+  .log > li { position: relative; padding: 0 0 18px 24px; border-left: 1.5px dashed var(--line); margin-left: 6px; }
+  .log > li:last-child { padding-bottom: 0; border-left-color: transparent; }
+  .log > li::before { content: ""; position: absolute; left: -7px; top: 5px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg-2); border: 2px solid var(--line); }
+  .log > li:first-child::before { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+  .log .v { font: 700 12px var(--mono); color: var(--accent); border: 1px solid var(--accent); padding: 1px 7px; border-radius: 6px; margin-right: 8px; }
+  .log b { font-family: var(--head); }
+  .log small { color: var(--muted); margin-left: 6px; font-size: 12px; }
+  .log ul { margin: 6px 0 0 18px; font-size: 14px; color: var(--text-2); }
+  @media (max-width: 820px) { .about { grid-template-columns: 1fr; } }
+
+  /* bilah ajakan melayang (HP) */
+  .sticky-cta { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 20; display: none; gap: 8px; padding: 8px; border-radius: 20px;
+    background: rgba(18,43,78,.72); border: 1px solid rgba(124,196,255,.3); backdrop-filter: blur(14px) saturate(1.5); -webkit-backdrop-filter: blur(14px) saturate(1.5);
+    box-shadow: 0 14px 34px -12px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.2); translate: 0 140%; transition: translate .55s cubic-bezier(.32,1.35,.5,1); }
+  .sticky-cta.on { translate: 0 0; }
+  .sticky-cta a { flex: 1; justify-content: center; padding: 12px 10px; font-size: 15px; }
+  .sticky-cta .btn-primary { box-shadow: 3px 3px 0 var(--chalk); }
+  @media (max-width: 720px) { .sticky-cta { display: flex; } footer { padding-bottom: 96px; } }
+
+  .reveal { transition: opacity .7s ease, transform .8s cubic-bezier(.32,1.25,.5,1); }
+  @media (prefers-reduced-motion: reduce) {
+    .phone, .chip-float { animation: none; }
+    .sticky-cta, .screens figure, .tmock, .mode-toggle .pill { transition: none; }
+  }
 </style>
 </head>
 <body>
@@ -227,7 +325,7 @@
   <span class="orn hide-sm" style="bottom:-40px;left:40%;width:44px;--d:8s"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M20 3 V 37 M3 20 H 37"/><circle cx="20" cy="20" r="9"/></svg></span>
 
   <div>
-    <span class="eyebrow">📱 Progressive Web App · <b>tanpa Play Store</b></span>
+    <span class="eyebrow">📱 Aplikasi di HP · <b>tanpa Play Store</b> · v2.4</span>
     <h1>Uangmu tercatat,<br/>
       <span class="hand">langsung dari HP.<svg class="underline" viewBox="0 0 220 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5" d="M3 9 C 40 3, 80 12, 120 7 S 190 3, 217 8"/></svg></span>
     </h1>
@@ -244,7 +342,10 @@
 
   <div class="phone-wrap reveal">
     <span class="phone-note">tampilan aslinya ✏️</span>
-    <div class="phone"><img src="images/hp-dash.webp" alt="Dashboard Dompetku di HP: saldo bulan ini, pemasukan, pengeluaran, tabungan, tren 12 bulan, dan saldo rekening" width="500" height="880" /></div>
+    <div class="phone"><img src="images/hp-dash.webp" alt="Dashboard Dompetku di HP: saldo bulan ini, pemasukan, pengeluaran, tabungan, tren 12 bulan, dan saldo rekening" width="500" height="880" data-zoom="hero" /></div>
+    <span class="chip-float c1" aria-hidden="true"><i></i>+Rp 14,3 jt masuk</span>
+    <span class="chip-float c2" aria-hidden="true"><i></i>Tabungan Rp 3 jt</span>
+    <span class="chip-float c3" aria-hidden="true"><i></i>Budget aman ✓</span>
     <div class="pwa-badge"><img src="images/icon-192.png" alt="" /><div><b>Dompetku</b><small>di layar utama</small></div></div>
   </div>
 </header>
@@ -309,45 +410,72 @@
     <div class="card"><span class="n">06 · LAPORAN</span><h3>Report &amp; export CSV</h3><p>Ringkasan bulanan, budget vs aktual, dan transaksi rutin yang tercatat otomatis.</p></div>
   </div>
 
-  <div class="screens reveal" aria-label="Tampilan Dompetku di HP">
-    <figure><div class="mini"><img src="images/hp-dash.webp" alt="Dashboard" loading="lazy" /></div><figcaption>Dashboard</figcaption></figure>
-    <figure><div class="mini"><img src="images/hp-riwayat.webp" alt="Riwayat transaksi" loading="lazy" /></div><figcaption>Riwayat transaksi</figcaption></figure>
-    <figure><div class="mini"><img src="images/hp-budget.webp" alt="Budget per kategori" loading="lazy" /></div><figcaption>Budget</figcaption></figure>
-    <figure><div class="mini"><img src="images/hp-rekening.webp" alt="Saldo rekening dan e-wallet" loading="lazy" /></div><figcaption>Saldo rekening</figcaption></figure>
-    <figure><div class="mini"><img src="images/hp-split.webp" alt="Split bill dari foto struk" loading="lazy" /></div><figcaption>Split bill</figcaption></figure>
+  <div class="screens reveal" aria-label="Tampilan Dompetku di HP" data-carousel>
+    <figure><div class="mini"><img src="images/hp-dash.webp" alt="Dashboard: saldo bulan ini, tren, rekening" data-zoom="layar" loading="lazy" /></div><figcaption>Dashboard</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-riwayat.webp" alt="Riwayat transaksi dengan filter & pencarian" data-zoom="layar" loading="lazy" /></div><figcaption>Riwayat</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-budget.webp" alt="Budget per kategori" data-zoom="layar" loading="lazy" /></div><figcaption>Budget</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-rekening.webp" alt="Saldo bank, dompet digital & tunai" data-zoom="layar" loading="lazy" /></div><figcaption>Saldo rekening</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-tema.webp" alt="Pilih tema dan mode gelap/terang" data-zoom="layar" loading="lazy" /></div><figcaption>Pilih tema</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-tentang.webp" alt="Tentang aplikasi & catatan rilis" data-zoom="layar" loading="lazy" /></div><figcaption>Tentang</figcaption></figure>
   </div>
+  <div class="dots" data-dots aria-hidden="true"></div>
 
   <figure class="shot reveal">
     <div class="bar"><i></i><i></i><i></i><small>DOMPETKU · DI LAPTOP</small></div>
-    <img src="images/dashboard-gelap.webp" alt="Dashboard Dompetku di laptop, tema Gelap" width="1310" height="784" loading="lazy" />
+    <img src="images/dashboard-gelap.webp" alt="Dashboard Dompetku di laptop, mode gelap" width="1440" height="876" data-zoom="laptop" loading="lazy" />
   </figure>
 </section>
 
 <section id="tema" class="wrap">
   <div class="s-head reveal">
     <span class="label">Tema</span>
-    <h2>14 tema, <span class="hand">pilih sesukamu.</span></h2>
-    <p>Gelap, terang, sampai buku tulis dan papan kapur. Pratinjau dulu sebelum dipakai.</p>
+    <h2>11 tema, <span class="hand">gelap atau terang.</span></h2>
+    <p>Setiap tema punya versi gelap dan terang, atau ikut setelan HP. Coba tombol di bawah.</p>
   </div>
-  <div class="shot-row reveal">
-    <figure class="shot"><div class="bar"><i></i><i></i><i></i><small>TEMA TERANG</small></div><img src="images/dashboard-terang.webp" alt="Dashboard tema Terang" width="1310" height="746" loading="lazy" /></figure>
-    <figure class="shot"><div class="bar"><i></i><i></i><i></i><small>PILIH TEMA</small></div><img src="images/tema.webp" alt="Halaman pilih tema dengan pratinjau tema Buku Tulis" width="1310" height="746" loading="lazy" /></figure>
+  <div class="mode-toggle reveal" data-mode-toggle>
+    <div role="group" aria-label="Mode pratinjau">
+      <span class="pill" aria-hidden="true"></span>
+      <button type="button" data-m="dark" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>Gelap</button>
+      <button type="button" data-m="light" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Terang</button>
+    </div>
   </div>
-  <div class="themes reveal">
-    <span class="theme"><i style="--a:#0d2240;--b:#7cc4ff"></i>Gelap</span>
-    <span class="theme"><i style="--a:#f2f6fa;--b:#1e5aa8"></i>Terang</span>
-    <span class="theme"><i style="--a:#22372b;--b:#f7d774"></i>Papan Kapur</span>
-    <span class="theme"><i style="--a:#fdfbf4;--b:#c8403c"></i>Buku Tulis</span>
-    <span class="theme"><i style="--a:#0c0c0e;--b:#f0b429"></i>Klasik Gelap</span>
-    <span class="theme"><i style="--a:#e9e5dc;--b:#b83b37"></i>Kertas Terang</span>
-    <span class="theme"><i style="--a:#2b1d14;--b:#e8742a"></i>Retro 70-an</span>
-    <span class="theme"><i style="--a:#05060a;--b:#ff3df2"></i>Neon</span>
-    <span class="theme"><i style="--a:#fbe8ee;--b:#c2456b"></i>Sakura</span>
-    <span class="theme"><i style="--a:#0b0a08;--b:#d4a640"></i>Emas Mewah</span>
-    <span class="theme"><i style="--a:#0b2e24;--b:#d4af37"></i>Hijau Masjid</span>
-    <span class="theme"><i style="--a:#2a1c12;--b:#f0a952"></i>Kayu</span>
-    <span class="theme"><i style="--a:#030803;--b:#39ff6a"></i>Terminal</span>
-    <span class="theme"><i style="--a:#0a0f24;--b:#a78bfa"></i>Aurora</span>
+  <div class="tgrid reveal" data-tgrid></div>
+  <div class="duo reveal">
+    <figure><div class="mini"><img src="images/hp-dash.webp" alt="Dashboard mode gelap" data-zoom="mode" loading="lazy" /></div><figcaption>Gelap</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-dash-l.webp" alt="Dashboard mode terang" data-zoom="mode" loading="lazy" /></div><figcaption>Terang</figcaption></figure>
+  </div>
+</section>
+
+<section id="tentang" class="wrap">
+  <div class="s-head reveal">
+    <span class="label">Tentang</span>
+    <h2>Terus diperbarui, <span class="hand">otomatis.</span></h2>
+    <p>Versi baru langsung terpasang saat aplikasi dibuka.</p>
+  </div>
+  <div class="about reveal">
+    <div class="card">
+      <span class="label">Detail aplikasi</span>
+      <dl>
+        <div><dt>Versi</dt><dd>2.4.0</dd></div>
+        <div><dt>Rilis</dt><dd>9 Nov 2026</dd></div>
+        <div><dt>Platform</dt><dd>Android · iPhone · PC</dd></div>
+        <div><dt>Masuk</dt><dd>Akun Google</dd></div>
+        <div><dt>Developer</dt><dd>NaJiB. · Surabaya</dd></div>
+      </dl>
+    </div>
+    <div class="card">
+      <span class="label">Catatan rilis</span>
+      <ol class="log">
+        <li><span class="v">2.4</span><b>Tampilan makin segar</b><small>9 Nov 2026</small>
+          <ul><li>Semua tema bisa gelap atau terang</li><li>Menu bawah & atas lebih modern</li><li>Gerakan lebih halus saat membuka & mencari</li></ul></li>
+        <li><span class="v">2.3</span><b>Pilih tema sendiri</b><small>5 Nov 2026</small>
+          <ul><li>Ganti warna tampilan sesuai selera</li><li>Lihat total tabungan yang terkumpul</li></ul></li>
+        <li><span class="v">2.2</span><b>Foto struk lebih pintar</b><small>4 Nov 2026</small>
+          <ul><li>Foto struk lebih akurat, langsung terbaca di HP</li></ul></li>
+        <li><span class="v">2.1</span><b>Bagi tagihan & catat rekening</b><small>1 Nov 2026</small>
+          <ul><li>Bagi tagihan makan bareng dari foto struk</li><li>Catat saldo bank, dompet digital & tunai</li></ul></li>
+      </ol>
+    </div>
   </div>
 </section>
 
@@ -386,6 +514,11 @@
   </div>
 </div>
 
+<nav class="sticky-cta" aria-label="Ajakan">
+  <a class="btn btn-ghost" href="#daftar">Daftar akun</a>
+  <a class="btn btn-primary" href="https://dompetku9.vercel.app/">Buka aplikasi</a>
+</nav>
+
 <footer>
   <div class="wrap">
     <span>© 2026 Berkah Tech · Dompetku</span>
@@ -408,11 +541,84 @@
   const ua = navigator.userAgent;
   pilih(/iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'ios' : /Android/.test(ua) ? 'android' : /Mobi/.test(ua) ? 'android' : 'pc');
 
+
+  // ----- carousel layar HP: yang di tengah membesar + titik penanda -----
+  const car = document.querySelector('[data-carousel]');
+  const dotsEl = document.querySelector('[data-dots]');
+  if (car) {
+    const figs = [...car.querySelectorAll('figure')];
+    figs.forEach(() => dotsEl.appendChild(document.createElement('i')));
+    const tandaiTengah = () => {
+      const mid = car.scrollLeft + car.clientWidth / 2;
+      let best = 0, jarak = Infinity;
+      figs.forEach((f, i) => {
+        const d = Math.abs(f.offsetLeft + f.offsetWidth / 2 - mid);
+        if (d < jarak) { jarak = d; best = i; }
+      });
+      figs.forEach((f, i) => f.classList.toggle('is-center', i === best));
+      [...dotsEl.children].forEach((d, i) => d.classList.toggle('on', i === best));
+    };
+    let raf = 0;
+    car.addEventListener('scroll', () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(tandaiTengah); }, { passive: true });
+    addEventListener('resize', tandaiTengah);
+    tandaiTengah();
+  }
+
+  // ----- tema interaktif: 11 tema × gelap/terang -----
+  // [nama, gelap: bg, kartu, garis, teks, redup, aksen, (masuk, keluar, tabung)], [terang: ...]
+  const D = ['#6ee7b7', '#ff8a8a', '#c4b5fd'], L = ['#0f7550', '#c62828', '#6d28d9'];
+  const TEMA = [
+    ['Cetak Biru', ['#0d2240', '#122b4e', '#2b4a75', '#e4eefa', '#8199be', '#7cc4ff'], ['#f2f6fa', '#ffffff', '#c3d3e6', '#10233f', '#5a6f8c', '#1e5aa8']],
+    ['Doodle', ['#22372b', '#29402f', '#4b6a55', '#f4f1e6', '#b9c9b9', '#f7d774'], ['#fdfbf4', '#fffef9', '#ddd5bd', '#23356e', '#5e6779', '#c8403c']],
+    ['Klasik', ['#0c0c0e', '#1c1c20', '#3a3a42', '#ececec', '#8f8f98', '#f0b429'], ['#e9e5dc', '#fbfaf6', '#d6d1c5', '#2c2b28', '#66615a', '#b83b37', '#0f7550', '#b01f1f', '#6d28d9']],
+    ['Retro 70-an', ['#2b1d14', '#3a261a', '#6b4a35', '#f1e5cc', '#c9a982', '#e8742a'], ['#f3e7cf', '#fbf3e2', '#d6bf96', '#3a2417', '#765639', '#b4501a']],
+    ['Neon', ['#05060a', '#0a0e19', '#24345a', '#dff9ff', '#8794b3', '#ff3df2', '#6ff6ff', '#ff6b9a', '#d7a6ff'], ['#f7f7fb', '#ffffff', '#d9d9ec', '#14102a', '#5d5878', '#c800bb', '#00788f', '#c8124f', '#6d28d9']],
+    ['Sakura', ['#2a1520', '#351b29', '#5e3248', '#fbe8ee', '#c99aac', '#ff8fb1'], ['#fbe8ee', '#ffffff', '#f2cfd9', '#6e2a40', '#87596a', '#c2456b']],
+    ['Emas Mewah', ['#0b0a08', '#13110c', '#4a3d22', '#f0e2bd', '#a8976d', '#d4a640'], ['#f8f3e6', '#fffdf6', '#dccca0', '#2a2210', '#6b5c37', '#8a6a1c']],
+    ['Hijau Masjid', ['#0b2e24', '#0d3e31', '#2a7461', '#f6e7b9', '#9fc4b5', '#d4af37'], ['#f6f0dc', '#fffaea', '#d9c99a', '#0b3a2d', '#4b6a5c', '#0f6b51']],
+    ['Kayu', ['#2a1c12', '#3a2719', '#6e4b30', '#f7e8c9', '#c9a87d', '#f0a952'], ['#f3e6d1', '#fbf4e8', '#d2b893', '#3b2717', '#745639', '#a3501a']],
+    ['Terminal', ['#030803', '#061006', '#1d4a23', '#7dffa0', '#3fae5c', '#39ff6a', '#6ee7b7', '#ff7b72', '#79c0ff'], ['#d4e2c0', '#dfe9cf', '#9fb385', '#1a2f0f', '#36532a', '#2b5514', '#145a24', '#8f1f16', '#26448a']],
+    ['Aurora', ['#0a0f24', '#141a38', '#333d70', '#eef2ff', '#a5b4fc', '#a78bfa'], ['#f3f6ff', '#ffffff', '#cfd8f3', '#1b2147', '#5a6394', '#6d4ed8']],
+  ];
+  const grid = document.querySelector('[data-tgrid]');
+  grid.innerHTML = TEMA.map((t) => `<div class="tcard"><span class="tmock" aria-hidden="true"><span class="tm-bar"><i></i><i></i><i></i></span><span class="tm-hero"><i></i><i></i></span><span class="tm-row a"><i></i><i></i><i></i></span><span class="tm-row b"><i></i><i></i><i></i></span><span class="tm-row c"><i></i><i></i><i></i></span></span><b>${t[0]}</b></div>`).join('');
+  function warnai(mode) {
+    [...grid.children].forEach((c, i) => {
+      const p = TEMA[i][mode === 'dark' ? 1 : 2];
+      const def = mode === 'dark' ? D : L;
+      const v = { bg: p[0], card: p[1], line: p[2], text: p[3], muted: p[4], accent: p[5], inc: p[6] || def[0], exp: p[7] || def[1], sav: p[8] || def[2] };
+      const m = c.firstElementChild;
+      Object.entries(v).forEach(([k, val]) => m.style.setProperty('--t-' + k, val));
+    });
+  }
+  const tg = document.querySelector('[data-mode-toggle]');
+  tg.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-m]');
+    if (!b) return;
+    tg.querySelectorAll('[data-m]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    tg.classList.toggle('light', b.dataset.m === 'light');
+    warnai(b.dataset.m);
+  });
+  warnai('dark');
+
+  // ----- bilah ajakan di HP: muncul setelah melewati hero, sembunyi di bagian daftar -----
+  const cta = document.querySelector('.sticky-cta');
+  const hero = document.querySelector('.hero');
+  const daftar = document.getElementById('daftar');
+  const cekCta = () => {
+    const lewat = hero.getBoundingClientRect().bottom < 0;
+    const r = daftar.getBoundingClientRect();
+    cta.classList.toggle('on', lewat && !(r.top < innerHeight && r.bottom > 0));
+  };
+  addEventListener('scroll', cekCta, { passive: true });
+  cekCta();
+
   // ----- efek muncul saat digulir & garis nav -----
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
   const nav = document.getElementById('nav');
   addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
 </script>
+<script src="lightbox.js" defer></script>
 </body>
 </html>
