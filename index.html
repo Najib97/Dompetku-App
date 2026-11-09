@@ -342,6 +342,34 @@
   .qa-dim { position: fixed; inset: 0; z-index: 39; background: rgba(4,12,26,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .3s; }
   .qa-dim.on { opacity: 1; pointer-events: auto; }
   @media (prefers-reduced-motion: reduce) { .qa-item, .qa-btn img, .qa-btn .x, .qa-dim { transition: none; } }
+
+  /* ---------- tombol bawah selebar layar (HP) ---------- */
+  .qa { left: calc(12px + env(safe-area-inset-left)); right: calc(12px + env(safe-area-inset-right)); }
+  .qa-bar { display: flex; gap: 10px; align-items: stretch; }
+  .qa-main { position: relative; flex: 1; min-height: 58px; display: flex; align-items: center; justify-content: center; gap: 12px; overflow: hidden; isolation: isolate;
+    border-radius: 18px; border: 2px solid var(--accent-ink); color: var(--accent-ink); text-decoration: none; font: 800 17px var(--head); letter-spacing: -.01em;
+    background: radial-gradient(circle at 20% 0%, rgba(255,255,255,.5) 0 18%, transparent 55%), var(--accent);
+    box-shadow: 4px 4px 0 var(--chalk), 0 14px 30px -10px rgba(31,178,236,.8); transition: transform .3s cubic-bezier(.32,1.45,.5,1); }
+  .qa-main:active { transform: scale(.97); }
+  .qa-main img, .qa-main > svg:first-child { width: 30px; height: 30px; border-radius: 8px; flex: none; }
+  .qa-main .arr { width: 20px; height: 20px; flex: none; animation: qa-arr 1.6s ease-in-out infinite; }
+  @keyframes qa-arr { 0%,100% { translate: 0 0; } 50% { translate: 4px 0; } }
+  /* kilau yang menyapu tombol */
+  .qa-main::after { content: ""; position: absolute; inset: -20% auto -20% -40%; width: 35%; z-index: -1; rotate: 18deg;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.65), transparent); animation: qa-shine 3.6s ease-in-out infinite; }
+  @keyframes qa-shine { 0%, 55% { translate: 0 0; } 100% { translate: 520% 0; } }
+  /* cahaya berdenyut di sekeliling bar */
+  .qa-bar::before { content: ""; position: absolute; inset: -6px; border-radius: 24px; border: 2px solid var(--accent); opacity: 0; pointer-events: none; animation: qa-glow 2.6s ease-out infinite; }
+  @keyframes qa-glow { 0% { opacity: .65; scale: .98; } 100% { opacity: 0; scale: 1.06; } }
+  .qa.hello .qa-bar { animation: qa-pop .8s cubic-bezier(.32,1.45,.5,1); }
+  @keyframes qa-pop { 0% { scale: .7; translate: 0 30px; } 60% { scale: 1.03; } 100% { scale: 1; translate: 0 0; } }
+  @media (prefers-reduced-motion: reduce) { .qa-main::after, .qa-bar::before, .qa-main .arr, .qa.hello .qa-bar { animation: none; } }
+
+  .qa-side { position: relative; width: 58px; flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border-radius: 18px; text-decoration: none;
+    color: #fff; font: 700 10.5px "Plus Jakarta Sans", sans-serif; border: 2px solid #062a14;
+    background: radial-gradient(circle at 30% 0%, rgba(255,255,255,.45) 0 18%, transparent 55%), #25d366; box-shadow: 4px 4px 0 #9ff0bf; transition: transform .3s cubic-bezier(.32,1.45,.5,1); }
+  .qa-side svg { width: 24px; height: 24px; }
+  .qa-side:active { transform: scale(.94); }
 </style>
 </head>
 <body>
@@ -553,18 +581,11 @@
   </div>
 </div>
 
-<div class="qa-dim" data-qa-dim></div>
 <div class="qa off" data-qa>
-  <div class="qa-items" id="qa-items">
-    <a class="qa-item" href="https://dompetku9.vercel.app/" style="--i:0;--c:#1fb2ec"><span>Buka aplikasi</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></i></a>
-    <a class="qa-item" href="#daftar" style="--i:1;--c:#25d366"><span>Daftar akun</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg></i></a>
-    <a class="qa-item" href="#install" style="--i:2;--c:#a78bfa"><span>Cara install</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></i></a>
+  <div class="qa-bar">
+    <a class="qa-main" href="https://dompetku9.vercel.app/"><img src="images/icon-192.png" alt="" />Buka aplikasi<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <a class="qa-side" href="#daftar" aria-label="Daftar akun lewat WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg>Daftar</a>
   </div>
-  <svg class="qa-spark s1" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 1v10M1 6h10M2.6 2.6l1.6 1.6M9.4 9.4L7.8 7.8"/></svg><svg class="qa-spark s2" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 1v10M1 6h10"/></svg>
-  <button type="button" class="qa-btn" aria-expanded="false" aria-controls="qa-items" aria-label="Menu cepat: buka aplikasi, daftar akun, cara install">
-    <img src="images/icon-192.png" alt="" />
-    <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-  </button>
 </div>
 
 <footer>
@@ -671,19 +692,6 @@
     qaDiam = setTimeout(() => qaCek('diam'), 700); // berhenti menggulir → muncul lagi
   }, { passive: true });
   qaCek('diam');
-
-  const qaBtn = qa.querySelector('.qa-btn');
-  const qaDim = document.querySelector('[data-qa-dim]');
-  function qaBuka(buka) {
-    qa.classList.toggle('open', buka);
-    qaDim.classList.toggle('on', buka);
-    qaBtn.setAttribute('aria-expanded', String(buka));
-    if (buka && navigator.vibrate) navigator.vibrate(8);
-  }
-  qaBtn.addEventListener('click', () => qaBuka(!qa.classList.contains('open')));
-  qaDim.addEventListener('click', () => qaBuka(false));
-  qa.querySelectorAll('.qa-item').forEach((a) => a.addEventListener('click', () => qaBuka(false)));
-  addEventListener('keydown', (e) => e.key === 'Escape' && qaBuka(false));
 
   // ----- efek muncul saat digulir & garis nav -----
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
