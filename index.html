@@ -370,6 +370,19 @@
     background: radial-gradient(circle at 30% 0%, rgba(255,255,255,.45) 0 18%, transparent 55%), #25d366; box-shadow: 4px 4px 0 #9ff0bf; transition: transform .3s cubic-bezier(.32,1.45,.5,1); }
   .qa-side svg { width: 24px; height: 24px; }
   .qa-side:active { transform: scale(.94); }
+
+  .duo { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 26px 22px; max-width: 920px; margin: 44px auto 0; }
+  .duo figure { width: auto; }
+  .duo figure:nth-child(odd) .mini { rotate: -2deg; translate: 0 0; }
+  .duo figure:nth-child(even) .mini { rotate: 2deg; translate: 0 14px; }
+  .duo figure .mini { transition: rotate .5s cubic-bezier(.32,1.45,.5,1), translate .5s cubic-bezier(.32,1.45,.5,1); }
+  .duo figure:hover .mini { rotate: 0deg; translate: 0 -6px; }
+  .duo figcaption { margin-top: 18px; }
+  @media (max-width: 760px) {
+    .duo { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 16px; margin: 36px -24px 0; padding: 10px 24px 26px; scrollbar-width: none; }
+    .duo::-webkit-scrollbar { display: none; }
+    .duo figure { flex: none; width: 58vw; max-width: 240px; scroll-snap-align: center; }
+  }
 </style>
 </head>
 <body>
@@ -507,9 +520,15 @@
     </div>
   </div>
   <div class="tgrid reveal" data-tgrid></div>
-  <div class="duo reveal">
-    <figure><div class="mini"><img src="images/hp-dash.webp" alt="Dashboard mode gelap" data-zoom="mode" loading="lazy" /></div><figcaption>Gelap</figcaption></figure>
-    <figure><div class="mini"><img src="images/hp-dash-l.webp" alt="Dashboard mode terang" data-zoom="mode" loading="lazy" /></div><figcaption>Terang</figcaption></figure>
+  <div class="duo reveal" aria-label="Dashboard dalam berbagai tema">
+    <figure><div class="mini"><img src="images/hp-dash.webp" alt="Dashboard tema Cetak Biru · Gelap" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Cetak Biru · Gelap</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-dash-l.webp" alt="Dashboard tema Cetak Biru · Terang" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Cetak Biru · Terang</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-t-aurora.webp" alt="Dashboard tema Aurora · Gelap" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Aurora · Gelap</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-t-doodle.webp" alt="Dashboard tema Doodle · Terang" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Doodle · Terang</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-t-sakura.webp" alt="Dashboard tema Sakura · Gelap" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Sakura · Gelap</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-t-terminal.webp" alt="Dashboard tema Terminal · Terang" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Terminal · Terang</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-t-masjid.webp" alt="Dashboard tema Hijau Masjid · Terang" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Hijau Masjid · Terang</figcaption></figure>
+    <figure><div class="mini"><img src="images/hp-t-neon.webp" alt="Dashboard tema Neon · Gelap" data-zoom="tema-hp" loading="lazy" /></div><figcaption>Neon · Gelap</figcaption></figure>
   </div>
 </section>
 
