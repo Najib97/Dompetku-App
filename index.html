@@ -289,20 +289,59 @@
   .log ul { margin: 6px 0 0 18px; font-size: 14px; color: var(--text-2); }
   @media (max-width: 820px) { .about { grid-template-columns: 1fr; } }
 
-  /* bilah ajakan melayang (HP) */
-  .sticky-cta { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 20; display: none; gap: 8px; padding: 8px; border-radius: 20px;
-    background: rgba(18,43,78,.72); border: 1px solid rgba(124,196,255,.3); backdrop-filter: blur(14px) saturate(1.5); -webkit-backdrop-filter: blur(14px) saturate(1.5);
-    box-shadow: 0 14px 34px -12px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.2); translate: 0 140%; transition: translate .55s cubic-bezier(.32,1.35,.5,1); }
-  .sticky-cta.on { translate: 0 0; }
-  .sticky-cta a { flex: 1; justify-content: center; padding: 12px 10px; font-size: 15px; }
-  .sticky-cta .btn-primary { box-shadow: 3px 3px 0 var(--chalk); }
-  @media (max-width: 720px) { .sticky-cta { display: flex; } footer { padding-bottom: 96px; } }
 
   .reveal { transition: opacity .7s ease, transform .8s cubic-bezier(.32,1.25,.5,1); }
   @media (prefers-reduced-motion: reduce) {
     .phone, .chip-float { animation: none; }
-    .sticky-cta, .screens figure, .tmock, .mode-toggle .pill { transition: none; }
+    .screens figure, .tmock, .mode-toggle .pill { transition: none; }
   }
+
+  /* ---------- tombol cepat (HP): kecil, tidak menutupi konten ---------- */
+  .qa { position: fixed; right: calc(16px + env(safe-area-inset-right)); bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 40; display: none;
+    transition: translate .5s cubic-bezier(.32,1.35,.5,1), opacity .25s, scale .5s cubic-bezier(.32,1.35,.5,1); }
+  .qa.off { translate: 0 120px; opacity: 0; scale: .6; pointer-events: none; }
+  .qa-btn { position: relative; width: 62px; height: 62px; border-radius: 50%; border: 2px solid var(--accent-ink); cursor: pointer; padding: 0; display: grid; place-items: center;
+    background: radial-gradient(circle at 32% 26%, rgba(255,255,255,.55) 0 16%, transparent 45%), var(--accent); color: var(--accent-ink);
+    box-shadow: 4px 4px 0 var(--chalk), 0 12px 26px -8px rgba(31,178,236,.7); transition: transform .35s cubic-bezier(.32,1.45,.5,1), box-shadow .2s; }
+  .qa-btn:active { transform: scale(.9); }
+  /* cincin cahaya berdenyut */
+  .qa-btn::before, .qa-btn::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--accent); opacity: 0; pointer-events: none; animation: qa-ring 2.6s ease-out infinite; }
+  .qa-btn::after { animation-delay: 1.3s; }
+  @keyframes qa-ring { 0% { scale: 1; opacity: .7; } 100% { scale: 1.7; opacity: 0; } }
+  .qa.open .qa-btn::before, .qa.open .qa-btn::after { animation: none; }
+  .qa-btn svg { width: 26px; height: 26px; }
+  /* goyang sekali saat pertama muncul */
+  .qa.hello .qa-btn { animation: qa-hello .9s cubic-bezier(.32,1.45,.5,1); }
+  @keyframes qa-hello { 0% { rotate: 0deg; scale: .4; } 40% { rotate: -14deg; scale: 1.12; } 60% { rotate: 10deg; } 80% { rotate: -4deg; } 100% { rotate: 0deg; scale: 1; } }
+  /* percikan doodle */
+  .qa-spark { position: absolute; width: 12px; height: 12px; color: var(--chalk); pointer-events: none; animation: qa-tw 2.4s ease-in-out infinite; }
+  .qa-spark.s1 { top: -10px; left: -8px; } .qa-spark.s2 { bottom: 4px; left: -16px; width: 9px; animation-delay: 1.2s; }
+  .qa.open .qa-spark { opacity: 0; }
+  @keyframes qa-tw { 0%,100% { scale: .6; rotate: 0deg; opacity: .4; } 50% { scale: 1.15; rotate: 45deg; opacity: 1; } }
+  @media (max-width: 720px) { .qa { display: block; } footer { padding-bottom: 96px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .qa, .qa-btn { transition: none; }
+    .qa-btn::before, .qa-btn::after, .qa-spark, .qa.hello .qa-btn { animation: none; }
+  }
+
+  .qa-btn img { width: 34px; height: 34px; border-radius: 9px; transition: rotate .45s cubic-bezier(.32,1.45,.5,1), scale .3s, opacity .2s; }
+  .qa-btn .x { position: absolute; opacity: 0; rotate: -90deg; scale: .4; transition: rotate .45s cubic-bezier(.32,1.45,.5,1), scale .35s cubic-bezier(.32,1.45,.5,1), opacity .2s; }
+  .qa.open .qa-btn img { opacity: 0; rotate: 90deg; scale: .4; }
+  .qa.open .qa-btn .x { opacity: 1; rotate: 0deg; scale: 1; }
+  .qa-items { position: absolute; right: 4px; bottom: 76px; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; pointer-events: none; }
+  .qa-item { display: flex; align-items: center; gap: 10px; text-decoration: none; opacity: 0; translate: 0 24px; scale: .5; transform-origin: right bottom;
+    transition: translate .5s cubic-bezier(.32,1.45,.5,1), scale .5s cubic-bezier(.32,1.45,.5,1), opacity .2s; transition-delay: calc((2 - var(--i)) * 30ms); }
+  .qa.open .qa-items { pointer-events: auto; }
+  .qa.open .qa-item { opacity: 1; translate: 0 0; scale: 1; transition-delay: calc(var(--i) * 60ms + 40ms); }
+  .qa-item span { padding: 9px 14px; border-radius: 14px; font: 700 14px "Plus Jakarta Sans", sans-serif; color: var(--text); white-space: nowrap;
+    background: rgba(18,43,78,.82); border: 1px solid rgba(124,196,255,.3); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 10px 24px -10px rgba(0,0,0,.7); }
+  .qa-item i { width: 50px; height: 50px; flex: none; display: grid; place-items: center; border-radius: 50%; color: #fff; border: 1.5px solid rgba(255,255,255,.35);
+    box-shadow: 3px 3px 0 rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.35); background: radial-gradient(circle at 32% 26%, rgba(255,255,255,.45) 0 14%, transparent 42%), var(--c); }
+  .qa-item i svg { width: 22px; height: 22px; }
+  .qa-item:active i { scale: .9; }
+  .qa-dim { position: fixed; inset: 0; z-index: 39; background: rgba(4,12,26,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .qa-dim.on { opacity: 1; pointer-events: auto; }
+  @media (prefers-reduced-motion: reduce) { .qa-item, .qa-btn img, .qa-btn .x, .qa-dim { transition: none; } }
 </style>
 </head>
 <body>
@@ -514,10 +553,19 @@
   </div>
 </div>
 
-<nav class="sticky-cta" aria-label="Ajakan">
-  <a class="btn btn-ghost" href="#daftar">Daftar akun</a>
-  <a class="btn btn-primary" href="https://dompetku9.vercel.app/">Buka aplikasi</a>
-</nav>
+<div class="qa-dim" data-qa-dim></div>
+<div class="qa off" data-qa>
+  <div class="qa-items" id="qa-items">
+    <a class="qa-item" href="https://dompetku9.vercel.app/" style="--i:0;--c:#1fb2ec"><span>Buka aplikasi</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></i></a>
+    <a class="qa-item" href="#daftar" style="--i:1;--c:#25d366"><span>Daftar akun</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg></i></a>
+    <a class="qa-item" href="#install" style="--i:2;--c:#a78bfa"><span>Cara install</span><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></i></a>
+  </div>
+  <svg class="qa-spark s1" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 1v10M1 6h10M2.6 2.6l1.6 1.6M9.4 9.4L7.8 7.8"/></svg><svg class="qa-spark s2" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 1v10M1 6h10"/></svg>
+  <button type="button" class="qa-btn" aria-expanded="false" aria-controls="qa-items" aria-label="Menu cepat: buka aplikasi, daftar akun, cara install">
+    <img src="images/icon-192.png" alt="" />
+    <svg class="x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+</div>
 
 <footer>
   <div class="wrap">
@@ -601,17 +649,41 @@
   });
   warnai('dark');
 
-  // ----- bilah ajakan di HP: muncul setelah melewati hero, sembunyi di bagian daftar -----
-  const cta = document.querySelector('.sticky-cta');
-  const hero = document.querySelector('.hero');
-  const daftar = document.getElementById('daftar');
-  const cekCta = () => {
-    const lewat = hero.getBoundingClientRect().bottom < 0;
-    const r = daftar.getBoundingClientRect();
-    cta.classList.toggle('on', lewat && !(r.top < innerHeight && r.bottom > 0));
-  };
-  addEventListener('scroll', cekCta, { passive: true });
-  cekCta();
+
+
+  // ----- tombol cepat: sembunyi saat menggulir ke bawah (membaca), muncul lagi saat ke atas / berhenti -----
+  const qa = document.querySelector('.qa');
+  const qaHero = document.querySelector('.hero');
+  const qaAkhir = document.querySelector('#daftar');
+  let qaY = scrollY, qaDiam = 0, qaPernah = false;
+  function qaCek(arah) {
+    const r = qaAkhir.getBoundingClientRect();
+    const boleh = qaHero.getBoundingClientRect().bottom < 0 && !(r.top < innerHeight && r.bottom > 0);
+    const tampil = boleh && (arah !== 'bawah' || qa.classList.contains('open'));
+    qa.classList.toggle('off', !tampil);
+    if (tampil && !qaPernah) { qaPernah = true; qa.classList.add('hello'); setTimeout(() => qa.classList.remove('hello'), 1000); }
+  }
+  addEventListener('scroll', () => {
+    const y = scrollY, arah = y > qaY + 4 ? 'bawah' : y < qaY - 4 ? 'atas' : null;
+    qaY = y;
+    if (arah) qaCek(arah);
+    clearTimeout(qaDiam);
+    qaDiam = setTimeout(() => qaCek('diam'), 700); // berhenti menggulir → muncul lagi
+  }, { passive: true });
+  qaCek('diam');
+
+  const qaBtn = qa.querySelector('.qa-btn');
+  const qaDim = document.querySelector('[data-qa-dim]');
+  function qaBuka(buka) {
+    qa.classList.toggle('open', buka);
+    qaDim.classList.toggle('on', buka);
+    qaBtn.setAttribute('aria-expanded', String(buka));
+    if (buka && navigator.vibrate) navigator.vibrate(8);
+  }
+  qaBtn.addEventListener('click', () => qaBuka(!qa.classList.contains('open')));
+  qaDim.addEventListener('click', () => qaBuka(false));
+  qa.querySelectorAll('.qa-item').forEach((a) => a.addEventListener('click', () => qaBuka(false)));
+  addEventListener('keydown', (e) => e.key === 'Escape' && qaBuka(false));
 
   // ----- efek muncul saat digulir & garis nav -----
   const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
