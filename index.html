@@ -405,7 +405,7 @@
   <span class="orn hide-sm" style="bottom:-40px;left:40%;width:44px;--d:8s"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path d="M20 3 V 37 M3 20 H 37"/><circle cx="20" cy="20" r="9"/></svg></span>
 
   <div>
-    <span class="eyebrow">📱 Aplikasi di HP · <b>tanpa Play Store</b> · v2.9</span>
+    <span class="eyebrow">📱 Aplikasi di HP · <b>tanpa Play Store</b> · v2.10</span>
     <h1>Uangmu tercatat,<br/>
       <span class="hand">langsung dari HP.<svg class="underline" viewBox="0 0 220 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5" d="M3 9 C 40 3, 80 12, 120 7 S 190 3, 217 8"/></svg></span>
     </h1>
@@ -548,7 +548,7 @@
     <div class="card">
       <span class="label">Detail aplikasi</span>
       <dl>
-        <div><dt>Versi</dt><dd>2.9.1</dd></div>
+        <div><dt>Versi</dt><dd>2.10.0</dd></div>
         <div><dt>Rilis</dt><dd>16 Nov 2026</dd></div>
         <div><dt>Platform</dt><dd>Android · iPhone · PC</dd></div>
         <div><dt>Masuk</dt><dd>Akun Google</dd></div>
@@ -558,8 +558,10 @@
     <div class="card">
       <span class="label">Catatan rilis</span>
       <ol class="log">
+        <li><span class="v">2.10</span><b>Pilihan paket &amp; data selalu aman</b><small>17 Nov 2026</small>
+          <ul><li>Bulanan <span data-harga>Rp 15.000</span>, Tahunan <span data-harga-tahun>Rp 99.000</span><span data-ada-selamanya>, atau Sekali bayar <span data-harga-selamanya>Rp 149.000</span> untuk <span data-kuota>50</span> pembeli pertama</span></li><li>Masa aktif habis tidak menghapus data, tinggal perpanjang untuk mencatat lagi</li><li>Perpanjang langganan tanpa perlu token baru</li></ul></li>
         <li><span class="v">2.9</span><b>Dompetku Pro</b><small>17 Nov 2026</small>
-          <ul><li>Akun baru langsung trial <span data-trial>30</span> hari dengan semua fitur</li><li>Setelah itu <span data-harga>Rp 15.000</span>/bulan, aktif cukup dengan tempel token yang dikirim lewat WhatsApp</li><li>Masa aktif habis: data tetap bisa dilihat &amp; di-export selama 30 hari</li></ul></li>
+          <ul><li>Akun baru langsung trial <span data-trial>30</span> hari dengan semua fitur</li><li>Setelah itu <span data-harga>Rp 15.000</span>/bulan, aktif cukup dengan tempel token yang dikirim lewat WhatsApp</li><li>Masa aktif habis: data tetap aman, bisa dilihat &amp; di-export kapan saja</li></ul></li>
         <li><span class="v">2.8</span><b>Target tabungan menyatu dengan Tabungan</b><small>17 Nov 2026</small>
           <ul><li>Tabungan yang dicatat otomatis menambah progress target</li><li>Cairkan tabungan: uang kembali ke rekening, tidak dihitung pemasukan</li><li>Progress target tampil di kartu Total Tabungan</li></ul></li>
         <li><span class="v">2.7</span><b>Target tabungan, hutang-piutang &amp; kunci sidik jari</b><small>16 Nov 2026</small>
@@ -744,6 +746,12 @@
       var rp = "Rp " + Number(d.harga_bulan).toLocaleString("id-ID");
       document.querySelectorAll("[data-harga]").forEach(function (el) { el.textContent = rp; });
       document.querySelectorAll("[data-trial]").forEach(function (el) { el.textContent = d.trial_hari; });
+      var rpx = function (n) { return "Rp " + Number(n).toLocaleString("id-ID"); };
+      document.querySelectorAll("[data-harga-tahun]").forEach(function (el) { el.textContent = rpx(d.harga_tahun); });
+      document.querySelectorAll("[data-harga-selamanya]").forEach(function (el) { el.textContent = rpx(d.harga_selamanya); });
+      document.querySelectorAll("[data-kuota]").forEach(function (el) { el.textContent = d.kuota_selamanya; });
+      var adaSelamanya = d.harga_selamanya > 0 && d.sisa_selamanya !== 0;
+      document.querySelectorAll("[data-ada-selamanya]").forEach(function (el) { el.hidden = !adaSelamanya; });
     })
     .catch(function () {});
 })();
