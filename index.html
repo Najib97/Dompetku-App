@@ -188,6 +188,19 @@
   .wa-card .num-wa { font: 700 20px var(--mono); color: #7ef0a8; }
   .wa-card .small { font-size: 13px; color: var(--muted); }
   @media (max-width: 820px) { .daftar { grid-template-columns: 1fr; } }
+  /* ---------- kata pengguna (testimoni yang diizinkan & disetujui) ---------- */
+  .testi-skor { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font: 700 14px var(--mono); color: var(--text-2); }
+  .testi-skor b { font-size: 22px; color: var(--text); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-items: start; }
+  .testi { display: grid; gap: 12px; }
+  .testi .bintang { color: #f5b50a; letter-spacing: 2px; font-size: 16px; }
+  .testi blockquote { margin: 0; font-size: 15px; line-height: 1.6; color: var(--text); }
+  .testi .fitur { display: flex; flex-wrap: wrap; gap: 6px; }
+  .testi .fitur span { font: 600 11px var(--mono); padding: 4px 8px; border-radius: 99px; border: 1px solid var(--line); color: var(--text-2); }
+  .testi .siapa { font: 700 13px var(--mono); color: var(--accent); }
+  .testi .siapa small { color: var(--muted); font-weight: 500; }
+  @media (max-width: 900px) { .testi-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .testi-grid { grid-template-columns: 1fr; } }
   /* ---------- harga & langkah Pro ---------- */
   .pricing { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
   .pricing.dua { grid-template-columns: repeat(2, minmax(0, 360px)); justify-content: center; }
@@ -418,6 +431,7 @@
       <a href="#pwa">PWA</a>
       <a href="#install">Cara install</a>
       <a href="#fitur">Fitur</a>
+      <a href="#ulasan" data-nav-ulasan hidden>Ulasan</a>
       <a href="#harga">Harga</a>
       <a href="#daftar">Daftar akun</a>
       <a href="https://dompetku9.vercel.app/" class="btn btn-sm">Buka aplikasi</a>
@@ -604,6 +618,16 @@
       </ol>
     </div>
   </div>
+</section>
+
+<section id="ulasan" class="wrap" hidden>
+  <div class="s-head reveal">
+    <span class="label">Kata pengguna</span>
+    <h2>Dari yang sudah <span class="hand">mencoba.</span></h2>
+    <p>Ulasan asli pengguna Dompetku, ditampilkan atas izin mereka.</p>
+    <span class="testi-skor" data-testi-skor></span>
+  </div>
+  <div class="testi-grid" data-testi></div>
 </section>
 
 <section id="harga" class="wrap">
@@ -835,6 +859,34 @@
         var p = el.getAttribute("data-wa-paket");
         el.href = "https://wa.me/6289681503428?text=" + encodeURIComponent("Halo Admin Dompetku, saya mau beli *Dompetku Pro " + p + "* (" + rpx(hargaPaket[p]) + ").\n\nNama: \nGmail akun Dompetku: ");
       });
+    })
+    .catch(function () {});
+})();
+</script>
+<script>
+/* Testimoni: hanya ulasan yang diizinkan pemiliknya DAN disetujui admin (fungsi publik testimoni_publik). */
+(function () {
+  var URL_ = "https://qckfcawnhxkttkeornmp.supabase.co", KEY = "sb_publishable_0O-QhlMRaVrPM3RET0Mi2g_bEZmIF4j";
+  var FITUR = { catat: "Catat cepat", laporan: "Laporan", prediksi: "Perkiraan akhir bulan", budget: "Budget", target: "Target tabungan", hutang: "Hutang & piutang", split: "Split bill", qris: "QRIS", rutin: "Transaksi rutin", rekening: "Saldo & rekening", pengingat: "Notifikasi HP", biometrik: "Kunci sidik jari", impor: "Import / export", tampilan: "Tampilan & tema" };
+  var BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+  var esc = function (t) { var d = document.createElement("div"); d.textContent = String(t == null ? "" : t); return d.innerHTML; };
+  fetch(URL_ + "/rest/v1/rpc/testimoni_publik", { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: "{}" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d || !d.data || !d.data.length) return;
+      var sec = document.getElementById("ulasan");
+      var grid = sec.querySelector("[data-testi]");
+      grid.innerHTML = d.data.map(function (x) {
+        var b = x.bulan ? x.bulan.split("-") : [];
+        var kapan = b.length === 2 ? BULAN[Number(b[0]) - 1] + " " + b[1] : "";
+        var fitur = (x.fitur || []).slice(0, 3).map(function (f) { return "<span>" + esc(FITUR[f] || f) + "</span>"; }).join("");
+        return '<figure class="card testi"><div class="bintang" aria-label="' + x.bintang + ' dari 5 bintang">' + "★★★★★".slice(0, x.bintang) + '<span style="opacity:.25">' + "★★★★★".slice(x.bintang) + "</span></div>" +
+          "<blockquote>“" + esc(x.review) + "”</blockquote>" + (fitur ? '<div class="fitur">' + fitur + "</div>" : "") +
+          '<figcaption class="siapa">' + esc(x.nama) + (kapan ? " <small>· " + kapan + "</small>" : "") + "</figcaption></figure>";
+      }).join("");
+      if (d.jumlah && d.rata) sec.querySelector("[data-testi-skor]").innerHTML = "<b>" + String(d.rata).replace(".", ",") + "</b> / 5 · " + d.jumlah + " ulasan";
+      sec.hidden = false;
+      var nav = document.querySelector("[data-nav-ulasan]"); if (nav) nav.hidden = false;
     })
     .catch(function () {});
 })();
