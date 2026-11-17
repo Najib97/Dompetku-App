@@ -559,7 +559,7 @@
       <span class="label">Catatan rilis</span>
       <ol class="log">
         <li><span class="v">2.9</span><b>Dompetku Pro</b><small>17 Nov 2026</small>
-          <ul><li>Akun baru langsung trial 7 hari dengan semua fitur</li><li>Setelah itu Rp 13.000/bulan, aktif cukup dengan tempel token yang dikirim lewat WhatsApp</li><li>Masa aktif habis: data tetap bisa dilihat &amp; di-export selama 30 hari</li></ul></li>
+          <ul><li>Akun baru langsung trial <span data-trial>30</span> hari dengan semua fitur</li><li>Setelah itu <span data-harga>Rp 15.000</span>/bulan, aktif cukup dengan tempel token yang dikirim lewat WhatsApp</li><li>Masa aktif habis: data tetap bisa dilihat &amp; di-export selama 30 hari</li></ul></li>
         <li><span class="v">2.8</span><b>Target tabungan menyatu dengan Tabungan</b><small>17 Nov 2026</small>
           <ul><li>Tabungan yang dicatat otomatis menambah progress target</li><li>Cairkan tabungan: uang kembali ke rekening, tidak dihitung pemasukan</li><li>Progress target tampil di kartu Total Tabungan</li></ul></li>
         <li><span class="v">2.7</span><b>Target tabungan, hutang-piutang &amp; kunci sidik jari</b><small>16 Nov 2026</small>
@@ -731,6 +731,22 @@
   document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
   const nav = document.getElementById('nav');
   addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 8), { passive: true });
+</script>
+<script>
+/* Harga & lama trial selalu mengikuti pengaturan di aplikasi (Token Pro → Harga & trial).
+   Kunci di bawah adalah kunci publik (publishable) yang memang tertanam di aplikasi; fungsi ini hanya mengembalikan 2 angka. */
+(function () {
+  var URL_ = "https://qckfcawnhxkttkeornmp.supabase.co", KEY = "sb_publishable_0O-QhlMRaVrPM3RET0Mi2g_bEZmIF4j";
+  fetch(URL_ + "/rest/v1/rpc/harga_publik", { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: "{}" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) {
+      if (!d) return;
+      var rp = "Rp " + Number(d.harga_bulan).toLocaleString("id-ID");
+      document.querySelectorAll("[data-harga]").forEach(function (el) { el.textContent = rp; });
+      document.querySelectorAll("[data-trial]").forEach(function (el) { el.textContent = d.trial_hari; });
+    })
+    .catch(function () {});
+})();
 </script>
 <script src="lightbox.js" defer></script>
 </body>
