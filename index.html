@@ -193,6 +193,8 @@
   .pricing.dua { grid-template-columns: repeat(2, minmax(0, 360px)); justify-content: center; }
   .plan { display: flex; flex-direction: column; gap: 12px; padding: 28px 24px; }
   .plan.feat { border: 2px solid #f5b50a; box-shadow: 6px 6px 0 rgba(245,181,10,.18); }
+  .plan .coret { margin-bottom: -8px; font: 600 14px var(--mono); color: var(--muted); }
+  .plan .badge.promo { background: #ff8a8a; color: #2a0b0b; }
   .plan .badge { position: absolute; top: -12px; right: 18px; padding: 4px 10px; border-radius: 99px; background: linear-gradient(135deg,#ffe08a,#f5b50a 55%,#e29a00); color: #3a2600; font: 800 11px var(--mono); letter-spacing: .08em; }
   .plan h3 { font: 800 20px/1.2 var(--head); }
   .plan .price { font: 800 30px/1.15 var(--mono); color: var(--text); }
@@ -608,7 +610,7 @@
   <div class="s-head reveal">
     <span class="label">Harga</span>
     <h2>Coba dulu, <span class="hand">baru pilih paket.</span></h2>
-    <p>Akun baru langsung trial <b><span data-trial>30</span> hari</b> dengan semua fitur. Setelah itu pilih paket yang pas. Semua paket isinya sama: semua fitur Dompetku tanpa batas.</p>
+    <p>Akun baru langsung <b>free trial <span data-trial>30</span> hari</b> dengan semua fitur. Kalau trial habis dan belum berlangganan, akun jadi <b>read only</b>: data tetap aman dan bisa dilihat, tapi tidak bisa mencatat. Semua paket isinya sama: semua fitur Dompetku tanpa batas.</p>
   </div>
   <div class="pricing reveal" data-pricing>
     <div class="card plan">
@@ -619,18 +621,20 @@
       <a class="btn btn-ghost" data-wa-paket="Bulanan" href="https://wa.me/6289681503428?text=Halo%20Admin%20Dompetku%2C%20saya%20mau%20beli%20*Dompetku%20Pro%20Bulanan*%20(Rp%2015.000).%0A%0ANama%3A%20%0AGmail%20akun%20Dompetku%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg> Beli bulanan</a>
     </div>
     <div class="card plan feat">
-      <span class="badge">PALING HEMAT</span>
+      <span class="badge">LEBIH MURAH <span data-hemat>45%</span> DARI BULANAN</span>
       <h3>Tahunan</h3>
+      <s class="coret" data-coret-tahun>Rp 180.000</s>
       <div class="price"><span data-harga-tahun>Rp 99.000</span><small>/ tahun</small></div>
       <p class="sub">Setara <b data-perbulan>Rp 8.250</b>/bulan, hemat <b data-hemat>45%</b> dibanding bulanan.</p>
       <ul><li>Semua fitur Dompetku</li><li>Bayar sekali setahun, tidak repot perpanjang</li></ul>
       <a class="btn btn-primary" data-wa-paket="Tahunan" href="https://wa.me/6289681503428?text=Halo%20Admin%20Dompetku%2C%20saya%20mau%20beli%20*Dompetku%20Pro%20Tahunan*%20(Rp%2099.000).%0A%0ANama%3A%20%0AGmail%20akun%20Dompetku%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg> Beli tahunan</a>
     </div>
     <div class="card plan" data-ada-selamanya>
-      <span class="badge">EARLY BIRD</span>
+      <span class="badge promo">KHUSUS <span data-kuota>50</span> PEMBELI PERTAMA</span>
       <h3>Sekali bayar</h3>
+      <s class="coret" data-coret-selamanya>Rp 198.000</s>
       <div class="price"><span data-harga-selamanya>Rp 149.000</span><small>selamanya</small></div>
-      <p class="sub">Harga perkenalan khusus <b data-kuota>50</b> pembeli pertama. Sisa <b data-sisa>50</b> kuota.</p>
+      <p class="sub">Seharga 2 tahun langganan, dipakai selamanya. Sisa <b data-sisa>50</b> kuota.</p>
       <ul><li>Semua fitur Dompetku</li><li>Tanpa perpanjang lagi</li></ul>
       <a class="btn btn-ghost" data-wa-paket="Sekali bayar" href="https://wa.me/6289681503428?text=Halo%20Admin%20Dompetku%2C%20saya%20mau%20beli%20*Dompetku%20Pro%20Sekali%20bayar*%20(Rp%20149.000).%0A%0ANama%3A%20%0AGmail%20akun%20Dompetku%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg> Beli sekali bayar</a>
     </div>
@@ -824,6 +828,8 @@
       document.querySelectorAll("[data-perbulan]").forEach(function (el) { el.textContent = rpx(Math.round(d.harga_tahun / 12)); });
       var hemat = d.harga_bulan > 0 ? Math.round((1 - d.harga_tahun / (d.harga_bulan * 12)) * 100) : 0;
       document.querySelectorAll("[data-hemat]").forEach(function (el) { el.textContent = Math.max(hemat, 0) + "%"; });
+      document.querySelectorAll("[data-coret-tahun]").forEach(function (el) { el.textContent = rpx(d.harga_bulan * 12); });
+      document.querySelectorAll("[data-coret-selamanya]").forEach(function (el) { el.textContent = rpx(d.harga_tahun * 2); });
       var hargaPaket = { "Bulanan": d.harga_bulan, "Tahunan": d.harga_tahun, "Sekali bayar": d.harga_selamanya };
       document.querySelectorAll("[data-wa-paket]").forEach(function (el) {
         var p = el.getAttribute("data-wa-paket");
