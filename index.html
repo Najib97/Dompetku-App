@@ -324,6 +324,19 @@
   .log b { font-family: var(--head); }
   .log small { color: var(--muted); margin-left: 6px; font-size: 12px; }
   .log ul { margin: 6px 0 0 18px; font-size: 14px; color: var(--text-2); }
+  .log summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 0; cursor: pointer; list-style: none; padding-right: 26px; position: relative; border-radius: 6px; }
+  .log summary::-webkit-details-marker { display: none; }
+  .log summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .log summary .chev { position: absolute; right: 4px; top: 6px; width: 8px; height: 8px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .2s; }
+  .log details[open] summary .chev { transform: rotate(225deg); top: 9px; }
+  .log details:not([open]) summary:hover b { color: var(--accent); }
+  .rilis-hint { margin-left: 8px; font: 500 11px var(--mono); letter-spacing: 0; text-transform: none; color: var(--muted); }
+  /* desktop: tinggi kartu catatan rilis = kartu detail aplikasi; isi digulir di dalam kartu */
+  @media (min-width: 821px) {
+    .about { align-items: stretch; }
+    .rilis-card { display: flex; flex-direction: column; min-height: 0; }
+    .rilis-card .log { flex: 1 1 0; height: 0; min-height: 0; overflow-y: auto; padding-right: 6px; scrollbar-width: thin; }
+  }
   @media (max-width: 820px) { .about { grid-template-columns: 1fr; } }
 
 
@@ -588,33 +601,24 @@
       <span class="label">Detail aplikasi</span>
       <dl>
         <div><dt>Versi</dt><dd>2.10.0</dd></div>
-        <div><dt>Rilis</dt><dd>16 Nov 2026</dd></div>
+        <div><dt>Rilis</dt><dd>17 Nov 2026</dd></div>
         <div><dt>Platform</dt><dd>Android · iPhone · PC</dd></div>
         <div><dt>Masuk</dt><dd>Akun Google</dd></div>
         <div><dt>Developer</dt><dd>NaJiB. · Surabaya</dd></div>
       </dl>
     </div>
-    <div class="card">
-      <span class="label">Catatan rilis</span>
+    <div class="card rilis-card">
+      <span class="label">Catatan rilis <small class="rilis-hint">ketuk versi untuk lihat detail</small></span>
       <ol class="log">
-        <li><span class="v">2.10</span><b>Pilihan paket &amp; data selalu aman</b><small>17 Nov 2026</small>
-          <ul><li>Bulanan <span data-harga>Rp 15.000</span>, Tahunan <span data-harga-tahun>Rp 99.000</span><span data-ada-selamanya>, atau Sekali bayar <span data-harga-selamanya>Rp 149.000</span> untuk <span data-kuota>30</span> pembeli pertama</span></li><li>Masa aktif habis tidak menghapus data, tinggal perpanjang untuk mencatat lagi</li><li>Perpanjang langganan tanpa perlu token baru</li></ul></li>
-        <li><span class="v">2.9</span><b>Dompetku Pro</b><small>17 Nov 2026</small>
-          <ul><li>Akun baru langsung trial <span data-trial>30</span> hari dengan semua fitur</li><li>Setelah itu <span data-harga>Rp 15.000</span>/bulan, aktif cukup dengan tempel token yang dikirim lewat WhatsApp</li><li>Masa aktif habis: data tetap aman, bisa dilihat &amp; di-export kapan saja</li></ul></li>
-        <li><span class="v">2.8</span><b>Target tabungan menyatu dengan Tabungan</b><small>17 Nov 2026</small>
-          <ul><li>Tabungan yang dicatat otomatis menambah progress target</li><li>Cairkan tabungan: uang kembali ke rekening, tidak dihitung pemasukan</li><li>Progress target tampil di kartu Total Tabungan</li></ul></li>
-        <li><span class="v">2.7</span><b>Target tabungan, hutang-piutang &amp; kunci sidik jari</b><small>16 Nov 2026</small>
-          <ul><li>Target tabungan dengan perkiraan kapan tercapai</li><li>Hutang &amp; piutang, cicilan, tagih lewat WhatsApp</li><li>Perkiraan sisa uang akhir bulan &amp; streak mencatat</li><li>Rekap tahunan yang bisa dibagikan</li><li>Cari transaksi dari semua bulan</li><li>Kunci aplikasi dengan sidik jari / wajah</li></ul></li>
-        <li><span class="v">2.6</span><b>Foto struk, kalender &amp; catat sekali ketuk</b><small>16 Nov 2026</small>
-          <ul><li>Foto struk langsung dari kamera</li><li>Kalender pengeluaran per hari</li><li>Transaksi favorit dicatat sekali ketuk, tetap bisa mencatat tanpa sinyal</li><li>Notifikasi budget hampir habis &amp; ringkasan mingguan</li><li>Gambar tagihan split bill berisi rincian item</li></ul></li>
-        <li><span class="v">2.5</span><b>Catat lebih cepat, saldo selalu cocok</b><small>15 Nov 2026</small>
-          <ul><li>Catat banyak sekaligus &amp; kategori otomatis</li><li>Cocokkan saldo, transfer &amp; refund tercatat rapi</li><li>Pengingat catat harian &amp; tagihan lewat notifikasi HP</li></ul></li>
-        <li><span class="v">2.4</span><b>Tampilan makin segar</b><small>9 Nov 2026</small>
-          <ul><li>Semua tema bisa gelap atau terang</li><li>Menu bawah & atas lebih modern</li><li>Gerakan lebih halus saat membuka & mencari</li></ul></li>
-        <li><span class="v">2.3</span><b>Pilih tema sendiri</b><small>5 Nov 2026</small>
-          <ul><li>Ganti warna tampilan sesuai selera</li><li>Lihat total tabungan yang terkumpul</li></ul></li>
-        <li><span class="v">2.2</span><b>Foto struk lebih pintar</b><small>4 Nov 2026</small>
-          <ul><li>Foto struk lebih akurat, langsung terbaca di HP</li></ul></li>
+        <li><details open><summary><span class="v">2.10</span><b>Pilihan paket &amp; data selalu aman</b><small>17 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Bulanan <span data-harga>Rp 15.000</span>, Tahunan <span data-harga-tahun>Rp 99.000</span><span data-ada-selamanya>, atau Sekali bayar <span data-harga-selamanya>Rp 149.000</span> untuk <span data-kuota>30</span> pembeli pertama</span></li><li>Masa aktif habis tidak menghapus data, tinggal perpanjang untuk mencatat lagi</li><li>Perpanjang langganan tanpa perlu token baru</li></ul></details></li>
+        <li><details><summary><span class="v">2.9</span><b>Dompetku Pro</b><small>17 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Akun baru langsung trial <span data-trial>30</span> hari dengan semua fitur</li><li>Setelah itu <span data-harga>Rp 15.000</span>/bulan, aktif cukup dengan tempel token yang dikirim lewat WhatsApp</li><li>Masa aktif habis: data tetap aman, bisa dilihat &amp; di-export kapan saja</li></ul></details></li>
+        <li><details><summary><span class="v">2.8</span><b>Target tabungan menyatu dengan Tabungan</b><small>17 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Tabungan yang dicatat otomatis menambah progress target</li><li>Cairkan tabungan: uang kembali ke rekening, tidak dihitung pemasukan</li><li>Progress target tampil di kartu Total Tabungan</li></ul></details></li>
+        <li><details><summary><span class="v">2.7</span><b>Target tabungan, hutang-piutang &amp; kunci sidik jari</b><small>16 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Target tabungan dengan perkiraan kapan tercapai</li><li>Hutang &amp; piutang, cicilan, tagih lewat WhatsApp</li><li>Perkiraan sisa uang akhir bulan &amp; streak mencatat</li><li>Rekap tahunan yang bisa dibagikan</li><li>Cari transaksi dari semua bulan</li><li>Kunci aplikasi dengan sidik jari / wajah</li></ul></details></li>
+        <li><details><summary><span class="v">2.6</span><b>Foto struk, kalender &amp; catat sekali ketuk</b><small>16 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Foto struk langsung dari kamera</li><li>Kalender pengeluaran per hari</li><li>Transaksi favorit dicatat sekali ketuk, tetap bisa mencatat tanpa sinyal</li><li>Notifikasi budget hampir habis &amp; ringkasan mingguan</li><li>Gambar tagihan split bill berisi rincian item</li></ul></details></li>
+        <li><details><summary><span class="v">2.5</span><b>Catat lebih cepat, saldo selalu cocok</b><small>15 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Catat banyak sekaligus &amp; kategori otomatis</li><li>Cocokkan saldo, transfer &amp; refund tercatat rapi</li><li>Pengingat catat harian &amp; tagihan lewat notifikasi HP</li></ul></details></li>
+        <li><details><summary><span class="v">2.4</span><b>Tampilan makin segar</b><small>9 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Semua tema bisa gelap atau terang</li><li>Menu bawah & atas lebih modern</li><li>Gerakan lebih halus saat membuka & mencari</li></ul></details></li>
+        <li><details><summary><span class="v">2.3</span><b>Pilih tema sendiri</b><small>5 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Ganti warna tampilan sesuai selera</li><li>Lihat total tabungan yang terkumpul</li></ul></details></li>
+        <li><details><summary><span class="v">2.2</span><b>Foto struk lebih pintar</b><small>4 Nov 2026</small><span class="chev" aria-hidden="true"></span></summary><ul><li>Foto struk lebih akurat, langsung terbaca di HP</li></ul></details></li>
       </ol>
     </div>
   </div>
