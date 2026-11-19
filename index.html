@@ -775,7 +775,7 @@
       <a class="btn btn-primary" data-wa-paket="Tahunan" href="https://wa.me/6289681503428?text=Halo%20Admin%20Dompetku%2C%20saya%20mau%20beli%20*Dompetku%20Pro%20Tahunan*%20(Rp%2099.000).%0A%0ANama%3A%20%0AGmail%20akun%20Dompetku%3A%20" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-5A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5l1.2-1.4-2-1-.9.8a4 4 0 0 1-2.2-2.2l.8-.9-1-2z"/></svg> Beli tahunan</a>
     </div>
     <div class="card plan" data-ada-selamanya>
-      <span class="badge promo">KHUSUS <span data-kuota>30</span> PEMBELI PERTAMA</span>
+      <span class="badge promo" data-badge-kuota>KHUSUS <span data-kuota>30</span> PEMBELI PERTAMA</span>
       <h3>Sekali bayar</h3>
       <s class="coret" data-coret-selamanya>Rp 198.000</s>
       <div class="price"><span data-harga-selamanya>Rp 149.000</span><small>selamanya</small></div>
@@ -970,6 +970,7 @@
       document.querySelectorAll("[data-ada-selamanya]").forEach(function (el) { el.hidden = !adaSelamanya; });
       document.querySelectorAll("[data-pricing]").forEach(function (el) { el.classList.toggle("dua", !adaSelamanya); });
       document.querySelectorAll("[data-sisa]").forEach(function (el) { el.textContent = d.sisa_selamanya == null ? "tanpa batas" : d.sisa_selamanya; });
+      if (d.sisa_selamanya != null && d.kuota_selamanya) document.querySelectorAll("[data-badge-kuota]").forEach(function (el) { el.textContent = "SISA " + d.sisa_selamanya + " DARI " + d.kuota_selamanya + " KUOTA"; });
       document.querySelectorAll("[data-perbulan]").forEach(function (el) { el.textContent = rpx(Math.round(d.harga_tahun / 12)); });
       var hemat = d.harga_bulan > 0 ? Math.round((1 - d.harga_tahun / (d.harga_bulan * 12)) * 100) : 0;
       document.querySelectorAll("[data-hemat]").forEach(function (el) { el.textContent = Math.max(hemat, 0) + "%"; });
