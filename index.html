@@ -6,7 +6,7 @@
 <title>Dompetku — Catatan keuangan pribadi, langsung dari HP</title>
 <meta name="description" content="Dompetku: aplikasi catatan keuangan (PWA) untuk pemasukan, pengeluaran, tabungan, budget, saldo rekening, dan split bill dari foto struk. Pasang dari browser, tanpa Play Store." />
 <meta property="og:title" content="Dompetku — Catatan keuangan pribadi, langsung dari HP" />
-<meta property="og:description" content="Pemasukan, pengeluaran, tabungan, budget, dan split bill foto struk. Pasang di HP dari browser, tanpa Play Store." />
+<meta property="og:description" content="Gajian baru seminggu kok udah boncos? Catat pemasukan, pengeluaran, budget &amp; tabungan, lihat ke mana uangmu pergi. Pasang di HP dari browser, tanpa Play Store." />
 <meta property="og:image" content="https://najib97.github.io/Dompetku-App/images/dashboard-gelap.webp" />
 <meta name="theme-color" content="#0d2240" />
 <link rel="icon" href="images/favicon.svg" type="image/svg+xml" />
@@ -529,6 +529,61 @@
     .reveal.stagger > * { opacity: 1; transform: none; filter: none; transition: none; }
     .phone { transform: none !important; }
   }
+
+  /* =====================================================================
+     HOOK "BONCOS": centang gejala -> solusi Dompetku, kalkulator jajan kecil, CTA
+     ===================================================================== */
+  #boncos .s-head h2 .hand { color: var(--expense); }
+  .boncos { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+  .gejala { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+  .skor-mini { display: none; }
+  @media (max-width: 900px) {
+    .skor-mini { grid-column: 1 / -1; position: sticky; top: 74px; z-index: 2; display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+      border-radius: 12px; border: 1.5px solid var(--line); background: var(--card-solid); box-shadow: 0 10px 24px -14px var(--shadow); font: 600 13px var(--mono); color: var(--text-2); }
+    .skor-mini .meter { flex: 1; }
+    .skor-mini b { color: var(--expense); }
+  }
+  .gj { position: relative; display: grid; grid-template-columns: 26px 1fr; gap: 4px 12px; align-items: start; width: 100%; min-height: 64px; padding: 14px 16px;
+    text-align: left; font: inherit; color: var(--text); cursor: pointer; background: var(--card); border: 1.5px dashed var(--line); border-radius: 14px;
+    transition: border-color .2s, background-color .2s, transform .25s var(--ease-out); }
+  .gj:hover { border-color: var(--expense); transform: translateY(-2px); }
+  .gj:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .gj .kotak { grid-row: span 2; width: 24px; height: 24px; margin-top: 1px; display: grid; place-items: center; border-radius: 7px; border: 2px solid var(--muted); color: transparent;
+    transition: background-color .2s, border-color .2s, color .2s, scale .35s cubic-bezier(.32,1.45,.5,1); }
+  .gj .kotak svg { width: 15px; height: 15px; }
+  .gj b { font: 700 15px/1.4 var(--head); }
+  .gj .solusi { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .4s var(--ease-out), opacity .3s, padding-top .3s; }
+  .gj .solusi > span { overflow: hidden; font-size: 13.5px; line-height: 1.5; color: var(--income); }
+  .gj .solusi em { font-style: normal; font-weight: 700; }
+  .gj[aria-pressed="true"] { border-style: solid; border-color: var(--expense); }
+  .gj[aria-pressed="true"] .kotak { background: var(--expense); border-color: var(--expense); color: var(--bg); scale: 1.08; }
+  .gj[aria-pressed="true"] .solusi { grid-template-rows: 1fr; opacity: 1; padding-top: 6px; }
+
+  .bocor { position: sticky; top: 86px; display: grid; gap: 18px; padding: 26px 24px; }
+  .bocor:hover { transform: none; }
+  .bocor .stempel { position: absolute; top: -16px; right: 18px; padding: 2px 12px; border: 2px solid var(--expense); border-radius: 8px; background: var(--card-solid);
+    font: 400 18px var(--hand); color: var(--expense); rotate: 6deg; }
+  .bocor h3 { font: 800 20px/1.25 var(--head); margin: 0; }
+  .skor { display: grid; gap: 10px; }
+  .meter { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; }
+  .meter i { height: 10px; border-radius: 99px; background: var(--line); transition: background-color .3s; }
+  .meter i.on { background: var(--expense); }
+  .skor p { font-size: 14.5px; color: var(--text-2); min-height: 3em; }
+  .skor p b { color: var(--text); }
+  .hitung { display: grid; gap: 10px; padding-top: 16px; border-top: 1px dashed var(--line); }
+  .hitung label { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; font: 600 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hitung label output { font: 700 16px var(--mono); letter-spacing: 0; text-transform: none; color: var(--text); }
+  .hitung input[type="range"] { width: 100%; height: 44px; margin: 0; accent-color: var(--expense); cursor: pointer; background: none; }
+  .hasil { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hasil div { padding: 12px 14px; border-radius: 12px; background: var(--bg-3); min-width: 0; }
+  .hasil small { display: block; font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hasil strong { display: block; margin-top: 2px; font: 800 clamp(16px, 2vw, 20px)/1.2 var(--mono); color: var(--expense); white-space: nowrap; }
+  .hitung .catatan { font-size: 12.5px; color: var(--muted); }
+  .bocor .cta { flex-direction: column; gap: 10px; }
+  .bocor .cta .btn { justify-content: center; width: 100%; }
+  @media (max-width: 900px) { .boncos { grid-template-columns: 1fr; } .bocor { position: relative; top: 0; } }
+  @media (max-width: 560px) { .gejala { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .gj, .gj .kotak, .gj .solusi, .meter i { transition: none; } }
 </style>
 <link rel="stylesheet" href="/ui/najib.css" />
 <script src="/ui/najib.js" defer></script>
@@ -598,6 +653,48 @@
   </div>
 </header>
 
+
+<section id="boncos" class="wrap" aria-labelledby="boncos-judul">
+  <div class="s-head reveal">
+    <span class="label">Kenapa uang cepat habis</span>
+    <h2 id="boncos-judul">Gajian baru seminggu, <span class="hand">kok udah boncos?</span></h2>
+    <p>Biasanya bukan karena boros besar-besaran. Yang bikin bocor justru pengeluaran kecil yang tidak pernah tercatat. Ketuk yang pernah kamu alami:</p>
+  </div>
+  <div class="boncos">
+    <div class="gejala reveal" role="group" aria-label="Tanda-tanda keuangan boncos">
+      <div class="skor-mini" aria-hidden="true"><span><b data-skor-n>0</b>/8 tanda boncos</span><div class="meter"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Saldo tinggal dikit, tapi lupa uangnya ke mana aja</b><span class="solusi"><span><em>Dompetku:</em> Riwayat &amp; laporan bulanan menunjukkan ke mana setiap rupiah pergi.</span></span></button>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Kopi, jajan, ongkir: &ldquo;cuma&rdquo; 20 ribu, tapi tiap hari</b><span class="solusi"><span><em>Dompetku:</em> Kategori &amp; kalender pengeluaran memperlihatkan jajan kecil yang diam-diam menumpuk.</span></span></button>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Belanja bulanan selalu lewat dari rencana</b><span class="solusi"><span><em>Dompetku:</em> Budget per kategori, plus notifikasi saat budget hampir habis.</span></span></button>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Baru tanggal 20-an sudah deg-degan lihat saldo</b><span class="solusi"><span><em>Dompetku:</em> Perkiraan sisa uang akhir bulan, jadi bisa ngerem lebih awal.</span></span></button>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Niat nabung tiap bulan, yang tersisa selalu nol</b><span class="solusi"><span><em>Dompetku:</em> Target tabungan dengan progres: setiap setoran langsung terhitung.</span></span></button>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Teman pinjam uang, lupa nagih (atau sungkan)</b><span class="solusi"><span><em>Dompetku:</em> Hutang &amp; piutang dengan pengingat jatuh tempo, tagih sopan lewat WhatsApp.</span></span></button>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Split bill nongkrong, ada yang belum transfer sampai sekarang</b><span class="solusi"><span><em>Dompetku:</em> Foto struk, bagi per orang, kirim tagihan rinci lengkap dengan QRIS.</span></span></button>
+      <button type="button" class="gj" aria-pressed="false"><span class="kotak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Saldo bank, e-wallet &amp; dompet tidak pernah cocok</b><span class="solusi"><span><em>Dompetku:</em> Semua rekening di satu tempat, plus fitur cocokkan saldo dengan uang sebenarnya.</span></span></button>
+    </div>
+    <aside class="card bocor reveal" aria-label="Cek kebocoran uang">
+      <span class="stempel" aria-hidden="true">anti boncos!</span>
+      <div class="skor">
+        <h3>Cek kebocoranmu</h3>
+        <div class="meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <p data-skor role="status" aria-live="polite" aria-atomic="true">Belum ada yang dicentang. Ketuk yang pernah kamu alami.</p>
+      </div>
+      <div class="hitung">
+        <label for="jajan">Jajan kecil per hari <output for="jajan" data-jajan>Rp 25.000</output></label>
+        <input id="jajan" type="range" min="5000" max="150000" step="5000" value="25000" aria-describedby="jajan-catatan" />
+        <div class="hasil">
+          <div><small>Sebulan</small><strong data-bulan>Rp 750.000</strong></div>
+          <div><small>Setahun</small><strong data-tahun>Rp 9.125.000</strong></div>
+        </div>
+        <p class="catatan" id="jajan-catatan">Hitungan sederhana: &times; 30 hari dan &times; 365 hari. Kalau tidak dicatat, angka ini tidak pernah kelihatan.</p>
+      </div>
+      <div class="cta">
+        <a class="btn btn-primary" href="#daftar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Mulai rapikan, gratis <span data-trial>30</span> hari</span></a>
+        <a class="btn btn-ghost" href="https://dompetku9.vercel.app/?demo">Coba demo dulu</a>
+      </div>
+    </aside>
+  </div>
+</section>
 
 <section id="pwa" class="wrap">
   <div class="s-head reveal">
@@ -1091,6 +1188,41 @@
     }, { threshold: .6 });
     setTimeout(function () { document.querySelectorAll(".plan .price span").forEach(function (el) { io3.observe(el); }); }, 1200);
   }
+})();
+</script>
+<script>
+/* Hook "boncos": centang gejala -> solusi Dompetku + skor; kalkulator jajan kecil per hari. */
+(function () {
+  var tombol = document.querySelectorAll("#boncos .gj"), meter = document.querySelectorAll("#boncos .meter"), skorN = document.querySelector("[data-skor-n]"), skor = document.querySelector("[data-skor]");
+  var pesan = function (n, t) {
+    if (!n) return "Belum ada yang dicentang. Ketuk yang pernah kamu alami.";
+    var a = "<b>" + n + " dari " + t + ".</b> ";
+    if (n <= 2) return a + "Masih aman, tapi kebocoran kecil tetap kebocoran.";
+    if (n <= 5) return a + "Uangmu bocor halus. Saatnya mulai mencatat.";
+    return a + "Fix boncos. Tenang, semuanya bisa dirapikan mulai hari ini.";
+  };
+  var hitungSkor = function () {
+    var n = document.querySelectorAll('#boncos .gj[aria-pressed="true"]').length;
+    meter.forEach(function (m) { Array.prototype.forEach.call(m.children, function (x, i) { x.classList.toggle("on", i < n); }); });
+    skorN.textContent = n;
+    skor.innerHTML = pesan(n, tombol.length);
+  };
+  tombol.forEach(function (b) {
+    b.addEventListener("click", function () {
+      b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true");
+      hitungSkor();
+    });
+  });
+
+  var rp = function (v) { return "Rp " + Number(v).toLocaleString("id-ID"); };
+  var jajan = document.getElementById("jajan"), out = document.querySelector("[data-jajan]"), bln = document.querySelector("[data-bulan]"), thn = document.querySelector("[data-tahun]");
+  var hitung = function () {
+    var v = Number(jajan.value);
+    out.textContent = rp(v); bln.textContent = rp(v * 30); thn.textContent = rp(v * 365);
+    jajan.setAttribute("aria-valuetext", rp(v) + " per hari, " + rp(v * 365) + " setahun");
+  };
+  jajan.addEventListener("input", hitung);
+  hitung();
 })();
 </script>
 <script src="lightbox.js" defer></script>
